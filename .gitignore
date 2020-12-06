@@ -1,0 +1,14 @@
+.venv/
+.idea/
+*/__pycache__
+*.egg-info
+dist/
+build/
+fedvision/framework/protobuf
+fedvision/paddle_fl/protobuf
+docs/apis/proto.md
+*.log
+logs/
+FedVision.egg-info/
+temp_data/
+*.org

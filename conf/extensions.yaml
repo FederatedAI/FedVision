@@ -1,0 +1,10 @@
+PaddleFL:
+  jobs:
+    - name: paddle_fl
+      schema: ../schema/paddle_fl.json
+      loader: fedvision.paddle_fl.job:PaddleFLJob
+  tasks:
+    - name: fl_trainer
+      loader: fedvision.paddle_fl.tasks.task.trainer:FLTrainer
+    - name: fl_aggregator
+      loader: fedvision.paddle_fl.tasks.task.aggregator:FLAggregator

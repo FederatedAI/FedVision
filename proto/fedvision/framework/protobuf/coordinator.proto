@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+import "fedvision/framework/protobuf/job.proto";
+
+package fedvision.framework.coordinator;
+
+service Coordinator {
+  rpc Subscribe(Subscribe.REQ) returns (stream Subscribe.REP) {}
+  rpc Proposal(Proposal.REQ) returns (Proposal.REP) {}
+  rpc FetchTask(FetchTask.REQ) returns (FetchTask.REP) {}
+  rpc Leave(Leave.REQ) returns (Leave.REP) {}
+}
+
+message Subscribe {
+  enum Status {
+    DUPLICATE_ENROLL = 0;
+    NOT_SERVING = 1;
+    SUCCESS = 2;
+  }
+
+  message REQ {
+    string party_id = 1;
+    repeated string job_types = 2;
+    string credential = 3; // preserve
+  }
+
+  message REP {
+    Status status = 1;
+    string proposal_id = 2;
+    string job_type = 3;
+  }
+}
+
+message FetchTask{
+  enum Status {
+    NOT_FOUND = 0;
+    NOT_ALLOW = 1;
+    TIMEOUT = 2;
+    CANCELED = 3;
+    RANDOM_OUT = 4;
+    READY = 5;
+  }
+  message REQ {
+    string party_id = 1;
+    string proposal_id = 2;
+  }
+  message REP {
+    Status status = 1;
+    fedvision.framework.Task task = 2;
+  }
+}
+
+
+message Proposal{
+  enum Status {
+    UNKNOWN = 0;
+    SUCCESS = 1;
+    NOT_ENOUGH_RESPONDERS= 2;
+    NOT_ENOUGH_SUBSCRIBERS = 3;
+    REJECT = 4;
+  }
+
+  message REQ {
+    string job_id = 1;
+    string job_type = 2;
+    repeated fedvision.framework.Task tasks = 4;
+    uint32 proposal_wait_time = 5;
+    uint32 minimum_acceptance = 6;
+    uint32 maximum_acceptance = 7;
+  }
+  message REP {
+    Status status = 1;
+  }
+}
+
+
+message Leave{
+  enum Status {
+    NOT_FOUND = 0;
+    SUCCESS = 1;
+  }
+  message REQ {
+    string party_id = 1;
+  }
+  message REP {
+    Status status = 1;
+  }
+}

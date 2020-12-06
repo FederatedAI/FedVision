@@ -1,0 +1,80 @@
+site_name: FedVision
+repo_name: FederatedAI/FedVision
+repo_url: https://github.com/FederatedAI/FedVision
+edit_uri: "https://github.com/FederatedAI/FedVision"
+site_url: "http://"
+
+copyright: © Copyright 2020 WeBank Co., Ltd. | All Rights Reserved.
+
+theme:
+  name: material
+  features:
+    tabs: true
+  logo: img/favicon.ico
+  favicon: img/favicon.ico
+  palette:
+    scheme: slate
+    primary: teal
+    accent: purple
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          rendering:
+            show_source: true
+      watch:
+        - fedvision
+  - mkdocs-jupyter
+
+markdown_extensions:
+  - mdx_math
+  - codehilite
+  - admonition
+  - codehilite:
+      guess_lang: false
+      linenums: false
+  - toc:
+      permalink: true
+  - footnotes
+  - meta
+  - def_list
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tabbed
+  - pymdownx.tilde
+
+extra_javascript:
+  - 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'
+
+extra_css:
+    - css/custom.css
+
+nav:
+  - Home: index.md
+  - Get Started:
+      - install: install.md
+  - Tutorials:
+      - tutorial 1: tutorials/1.ipynb
+  - Framework:
+      - schedular: framework/schedular.md
+  - API:
+      - code:
+        - cluster: apis/cluster.md
+        - coordinator: apis/coordinator.md
+      - protobuf: apis/proto.md
+  - Releases:
+      - Changelog: release/change_log.md

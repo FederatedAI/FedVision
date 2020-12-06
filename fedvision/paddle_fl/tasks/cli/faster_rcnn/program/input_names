@@ -1,0 +1,6 @@
+image
+im_info
+im_id
+gt_bbox
+gt_class
+is_crowd

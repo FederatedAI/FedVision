@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package fedvision;
+
+message File {
+  string name = 1;
+  bytes stream = 2;
+}
+message Directory {
+  repeated File files = 1;
+}
