@@ -27,7 +27,6 @@ REQUIRED_PACKAGES = [
     "PyYAML>=5.3.1",
     "click==7.1.2",
     "paddlepaddle==1.8.5",
-    "paddle_fl==1.1.0",
 ]
 
 setup(

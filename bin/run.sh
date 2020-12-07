@@ -1,7 +1,8 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 PaddleDetection="$(dirname $DIR)/deps/PaddleDetection"
-Fedvision="$(dirname $DIR)/fedvision"
-export PYTHONPATH="$PYTHONPATH:$PaddleDetection:$Fedvision"
+Fedvision="$(dirname $DIR)"
+PaddleFL="$(dirname $DIR)/deps/PaddleFL/python"
+export PYTHONPATH="$PYTHONPATH:$PaddleDetection:$Fedvision:$PaddleFL"
 
 # todo: use yaml or json
 
