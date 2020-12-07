@@ -149,3 +149,6 @@ class FedAvgTrainer(FLTrainer, FLJobBase):
             self._logger.debug("run send program done")
         self.cur_step += 1
         return loss
+
+    def save_model(self, model_path):
+        fluid.save(self._main_program, model_path)

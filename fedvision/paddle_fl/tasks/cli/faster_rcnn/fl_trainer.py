@@ -119,9 +119,6 @@ def fl_trainer(
         strategy=strategy,
     )
     logging.debug(f"job program loaded")
-    logging.debug(
-        f"feed_names: {trainer._feed_names}, target_names: {trainer._target_names}"
-    )
     place = fluid.CPUPlace() if device != "cuda" else fluid.CUDAPlace(0)
 
     logging.debug(f"trainer starting with place {place}")
@@ -152,7 +149,6 @@ def fl_trainer(
 
     epoch_id = -1
     step = 0
-    para_dir = "faster_rcnn_program"
 
     while epoch_id < max_iter:
         epoch_id += 1
@@ -160,7 +156,7 @@ def fl_trainer(
             logging.debug(f"not join, waiting next round")
             continue
 
-        logging.debug("epoch %d start train" % (epoch_id))
+        logging.debug(f"epoch {epoch_id} start train")
         dataset = DataReader(trainer_id, dataset=dataset_dir)
         data_loader = dataset.data_loader()
         for step_id, data in enumerate(data_loader):
@@ -168,8 +164,10 @@ def fl_trainer(
             step += 1
             logging.debug(f"step: {step}, loss: {acc}")
 
-        if trainer_id == 0:
-            trainer.save(para_dir, f"model/{epoch_id}")
+        # save model
+        trainer.save_model(f"model/{epoch_id}")
+
+        # info scheduler
         trainer.scheduler_agent.finish()
 
 
