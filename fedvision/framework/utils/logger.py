@@ -1,4 +1,3 @@
-import sys
 from pathlib import Path
 from typing import Any, Union
 
@@ -6,7 +5,6 @@ from google.protobuf import text_format
 from loguru import logger
 
 from fedvision import __logs_dir__
-
 
 __BASE_LOGGER = None
 
