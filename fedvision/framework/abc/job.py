@@ -18,7 +18,7 @@ class Job(metaclass=abc.ABCMeta):
     def set_required_resource(self, response):
         ...
 
-    def compile(self):
+    async def compile(self):
         ...
 
     @abc.abstractmethod

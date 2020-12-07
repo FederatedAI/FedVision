@@ -1,1 +1,1 @@
-python -m fedvision.framework.cli.submitter submit --config demo.yaml
+python -m fedvision.framework.cli.submitter submit --config config.yaml

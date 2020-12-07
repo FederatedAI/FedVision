@@ -73,10 +73,12 @@ class PaddleFLJob(Job):
                 f"--num-worker {self._worker_num}",
                 f"--ps-endpoint {self._server_endpoint}",
                 f"--config config.json",
+                f">{executor.stdout} 2>{executor.stderr}",
             ]
         )
         returncode = await executor.execute(cmd)
         if returncode != 0:
+
             raise FedvisionJobCompileException("compile error")
 
     def generate_proposal_request(self) -> coordinator_pb2.Proposal.REQ:

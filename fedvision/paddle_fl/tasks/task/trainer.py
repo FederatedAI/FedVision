@@ -81,7 +81,8 @@ class FLTrainer(Task):
                 f"--feed-names=feed_names",
                 f"--target-names=target_names",
                 f"--strategy=strategy",
-                f"--config config.json" f">{executor.stdout} 2>{executor.stderr}",
+                f"--config config.json",
+                f">{executor.stdout} 2>{executor.stderr}",
             ]
         )
         with executor.working_dir.joinpath("main_program").open("wb") as f:
