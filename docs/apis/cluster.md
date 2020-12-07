@@ -1,13 +1,13 @@
-## cluster
+## manager
 
-::: fedvision.framework.parties.cluster
+::: fedvision.framework.cluster.manager
     rendering:
       show_source: true
       show_root_heading: true
 
-## master
+## worker
 
-::: fedvision.framework.parties.master
+::: fedvision.framework.cluster.worker
     rendering:
       show_source: true
       show_root_heading: true

@@ -67,8 +67,6 @@ nav:
   - Home: index.md
   - Get Started:
       - install: install.md
-  - Tutorials:
-      - tutorial 1: tutorials/1.ipynb
   - Framework:
       - schedular: framework/schedular.md
   - API:

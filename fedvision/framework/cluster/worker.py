@@ -43,7 +43,7 @@ class ClusterWorker(Logger):
         port_end: int,
         manager_address: str,
     ):
-        self._task_queue: asyncio.Queue[Task] = asyncio.Queue()
+        self._task_queue: asyncio.Queue = asyncio.Queue()
         self._semaphore = asyncio.Semaphore(max_tasks)
 
         self._worker_id = worker_id

@@ -1,5 +1,6 @@
+mkdocs
 python-markdown-math
 mkdocs-material
-mkdocstrings
+mkdocstrings==0.13.6
 mkdocs-jupyter
 jupyter
