@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
+     <loc>http://</loc>
+     <lastmod>2020-12-07</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>http:///install/</loc>
+     <lastmod>2020-12-07</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>http:///framework/schedular/</loc>
+     <lastmod>2020-12-07</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>http:///apis/cluster/</loc>
+     <lastmod>2020-12-07</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>http:///apis/coordinator/</loc>
+     <lastmod>2020-12-07</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>http:///apis/proto/</loc>
+     <lastmod>2020-12-07</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>http:///release/change_log/</loc>
+     <lastmod>2020-12-07</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+</urlset>
