@@ -14,25 +14,19 @@
 
 from __future__ import print_function
 
-import sys
-import math
-from functools import reduce
-
 import collections
+import sys
+
 import six
-import logging
-
-import numpy as np
-import paddle.fluid as fluid
-
-from .details.ps_dispatcher import RoundRobin, PSDispatcher
-from paddle.fluid import core, framework, unique_name
-from paddle.fluid.framework import Program, default_main_program, \
-    default_startup_program, Block, Parameter, grad_var_name
-from .details import wait_server_ready, UnionFind, VarStruct, VarsDistributed
-from .details import delete_ops, find_op_by_output_arg
+from paddle.fluid import core, framework
 from paddle.fluid.distribute_lookup_table import find_distributed_lookup_table
+from paddle.fluid.framework import Program, default_main_program, \
+    default_startup_program, Parameter
 from paddle.fluid.transpiler.distribute_transpiler import DistributeTranspilerConfig, slice_variable
+
+from .details import UnionFind, VarsDistributed
+from .details import delete_ops
+from .details.ps_dispatcher import RoundRobin, PSDispatcher
 
 LOOKUP_TABLE_TYPE = "lookup_table"
 LOOKUP_TABLE_GRAD_TYPE = "lookup_table_grad"
