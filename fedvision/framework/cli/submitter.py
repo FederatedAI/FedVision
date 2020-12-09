@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from pathlib import Path
 
 import click
 import aiohttp
@@ -44,13 +45,33 @@ def post(path, json_data):
 
 
 @cli.command()
-@click.option("--config", type=click.File(), required=True)
+@click.option(
+    "--config",
+    type=click.Path(exists=True, file_okay=True, dir_okay=False),
+    required=True,
+)
 def submit(config):
-    config_json = yaml.safe_load(config)
+
+    base = Path(config)
+    with base.open("r") as f:
+        config_json = yaml.load(f, yaml.Loader)
     job_type = config_json.get("job_type")
     job_config = config_json.get("job_config")
+    algorithm_config_path = base.parent.joinpath(
+        config_json.get("algorithm_config")
+    ).absolute()
+    with algorithm_config_path.open("r") as f:
+        algorithm_config_string = f.read()
+
     extensions.get_job_schema_validator(job_type).validate(job_config)
-    post("submit", dict(job_type=job_type, job_config=job_config))
+    post(
+        "submit",
+        dict(
+            job_type=job_type,
+            job_config=job_config,
+            algorithm_config=algorithm_config_string,
+        ),
+    )
 
 
 if __name__ == "__main__":

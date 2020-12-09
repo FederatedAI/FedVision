@@ -45,7 +45,7 @@ class Job(metaclass=abc.ABCMeta):
 
     @classmethod
     @abc.abstractmethod
-    def load(cls, job_id: str, config) -> "Job":
+    def load(cls, job_id: str, config, algorithm_config) -> "Job":
         ...
 
     def generate_task_id(self, task_name):

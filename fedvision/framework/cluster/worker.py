@@ -77,7 +77,13 @@ class ClusterWorker(Logger):
         self.info(f"starting worker {self._worker_id}")
 
         self.info(f"staring grpc channel to cluster manager")
-        self._channel = grpc.aio.insecure_channel(self._manager_address)
+        self._channel = grpc.aio.insecure_channel(
+            self._manager_address,
+            options=[
+                ("grpc.max_send_message_length", 512 * 1024 * 1024),
+                ("grpc.max_receive_message_length", 512 * 1024 * 1024),
+            ],
+        )
         self._stub = cluster_pb2_grpc.ClusterManagerStub(self._channel)
 
         self.info(f"sending enroll request to cluster manager")

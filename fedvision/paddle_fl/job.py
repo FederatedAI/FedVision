@@ -31,7 +31,7 @@ class PaddleFLJob(Job):
     job_type = JOB_TYPE
 
     @classmethod
-    def load(cls, job_id, config) -> "PaddleFLJob":
+    def load(cls, job_id, config, algorithm_config) -> "PaddleFLJob":
         return PaddleFLJob(
             job_id=job_id,
             proposal_wait_time=config["proposal_wait_time"],
@@ -39,6 +39,7 @@ class PaddleFLJob(Job):
             program=config["program"],
             max_iter=config["max_iter"],
             config=config,
+            algorithm_config=algorithm_config,
         )
 
     def __init__(
@@ -49,6 +50,7 @@ class PaddleFLJob(Job):
         worker_num,
         max_iter,
         config,
+        algorithm_config,
     ):
         super().__init__(job_id=job_id)
         self._proposal_wait_time = proposal_wait_time
@@ -59,6 +61,7 @@ class PaddleFLJob(Job):
         )
 
         self._config_string = json.dumps(config)
+        self._algorithm_config = algorithm_config
 
         self._max_iter = max_iter
 
@@ -78,6 +81,8 @@ class PaddleFLJob(Job):
 
     async def compile(self):
         executor = ProcessExecutor(self.compile_path)
+        with self.compile_path.joinpath("algorithm_config.yaml").open("w") as f:
+            f.write(self._algorithm_config)
         with self.compile_path.joinpath("config.json").open("w") as f:
             f.write(self._config_string)
         executable = sys.executable
@@ -86,6 +91,7 @@ class PaddleFLJob(Job):
                 f"{executable} -m fedvision.paddle_fl.tasks.cli.{self._program}.fl_master",
                 f"--num-worker {self._worker_num}",
                 f"--ps-endpoint {self._server_endpoint}",
+                f"--algorithm-config algorithm_config.yaml",
                 f"--config config.json",
                 f">{executor.stdout} 2>{executor.stderr}",
             ]
@@ -143,6 +149,7 @@ class PaddleFLJob(Job):
                 self.compile_path.joinpath(f"compile/trainer{i}/strategy.pkl")
             ),
             config_string=self._config_string,
+            algorithm_config_string=self._algorithm_config,
         )
         task_pb.job_id = self.job_id
         task_pb.task_id = f"trainer_{i}"

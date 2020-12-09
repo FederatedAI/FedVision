@@ -37,16 +37,19 @@ from fedvision import __basedir__
 @click.option("--ps-endpoint", type=str)
 @click.option("--num-worker", type=int)
 @click.option("--config", type=click.Path(exists=True, file_okay=True, dir_okay=False))
-def fl_master(config, ps_endpoint, num_worker):
+@click.option(
+    "--algorithm-config", type=click.Path(exists=True, file_okay=True, dir_okay=False)
+)
+def fl_master(algorithm_config, config, ps_endpoint, num_worker):
     from paddle_fl.paddle_fl.core.master.job_generator import JobGenerator
-    from paddle_fl.paddle_fl.core.strategy.fl_strategy_base import FLStrategyFactory
+    from paddle_fl.paddle_fl.core.strategy.fl_strategy_base import FedAvgStrategy
 
-    build_strategy = FLStrategyFactory()
-    build_strategy.fed_avg = True
     with open(config) as f:
         config_json = json.load(f)
-    build_strategy.inner_step = config_json["inner_step"]
-    strategy = build_strategy.create_fl_strategy()
+
+    strategy = FedAvgStrategy()
+    strategy.fed_avg = True
+    strategy.inner_step = config_json["inner_step"]
 
     endpoints = [ps_endpoint]
     job_generator = JobGenerator()

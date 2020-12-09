@@ -6,7 +6,7 @@ export PYTHONPATH="$PYTHONPATH:$PaddleDetection:$Fedvision:$PaddleFL"
 
 # todo: use yaml or json
 
-export num_party=5
+export num_party=2
 
 python -m fedvision.framework.cli.coordinator --port 10001 > /dev/null 2>&1 &
 python -m fedvision.framework.cli.cluster_manager --port 10000 > /dev/null 2>&1 &

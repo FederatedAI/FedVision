@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import logging
 import pickle
 from typing import Optional
 
@@ -21,7 +21,6 @@ from paddle import fluid
 from fedvision.framework.utils.logger import Logger
 from fedvision.paddle_fl.protobuf import scheduler_pb2_grpc, scheduler_pb2
 from paddle_fl.paddle_fl.core.master.fl_job import FLJobBase
-from paddle_fl.paddle_fl.core.trainer.fl_trainer import FLTrainer
 
 
 class TrainerSchedulerAgent(Logger):
@@ -67,8 +66,9 @@ class TrainerSchedulerAgent(Logger):
         self._channel.close()
 
 
-class FedAvgTrainer(FLTrainer, FLJobBase):
+class FedAvgTrainer(FLJobBase):
     def __init__(self, scheduler_ep, trainer_ep):
+        self._logger = logging.getLogger("FLTrainer")
         super(FedAvgTrainer, self).__init__()
         self._scheduler_ep = scheduler_ep
         self._trainer_ep = trainer_ep

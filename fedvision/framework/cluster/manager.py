@@ -114,6 +114,9 @@ class ClusterManager(Logger, cluster_pb2_grpc.ClusterManagerServicer):
             rep = cluster_pb2.Enroll.REP(
                 status=cluster_pb2.Enroll.TASK_READY, task=task
             )
+            self.debug(
+                f"response task({task.task_id}, {task.task_type}) to worker {request.worker_id}"
+            )
             yield rep
 
         self.remove_worker(request.worker_id)
@@ -168,7 +171,6 @@ class ClusterManager(Logger, cluster_pb2_grpc.ClusterManagerServicer):
                 status=cluster_pb2.TaskResourceRequire.FAILED
             )
 
-        print(worker, endpoints)
         response = cluster_pb2.TaskResourceRequire.REP(
             status=cluster_pb2.TaskResourceRequire.SUCCESS, worker_id=worker.worker_id
         )
@@ -178,7 +180,12 @@ class ClusterManager(Logger, cluster_pb2_grpc.ClusterManagerServicer):
 
     async def start(self):
         self.info(f"starting cluster manager at port: {self._port}")
-        self._server = grpc.aio.server()
+        self._server = grpc.aio.server(
+            options=[
+                ("grpc.max_send_message_length", 512 * 1024 * 1024),
+                ("grpc.max_receive_message_length", 512 * 1024 * 1024),
+            ],
+        )
         cluster_pb2_grpc.add_ClusterManagerServicer_to_server(self, self._server)
         self._server.add_insecure_port(f"{self._host}:{self._port}")
         await self._server.start()

@@ -223,6 +223,7 @@ class RESTService(Logger):
         try:
             job_type = data["job_type"]
             job_config = data["job_config"]
+            algorithm_config = data.get("algorithm_config", None)
         except KeyError:
             return web.json_response(
                 data=dict(exception=traceback.format_exc()), status=400
@@ -236,7 +237,9 @@ class RESTService(Logger):
                 raise FedvisionExtensionException(f"job type {job_type} not supported")
             validator.validate(job_config)
             job_id = self.shared_status.generate_job_id()
-            job = loader.load(job_id=job_id, config=job_config)
+            job = loader.load(
+                job_id=job_id, config=job_config, algorithm_config=algorithm_config
+            )
 
         except Exception:
             # self.logger.exception("[submit]catch exception")
@@ -306,7 +309,13 @@ class ClusterManagerConnect(Logger):
 
     async def start_cluster_channel(self):
         self.info(f"start cluster channel to {self.address}")
-        self._channel = grpc.aio.insecure_channel(self.address)
+        self._channel = grpc.aio.insecure_channel(
+            self.address,
+            options=[
+                ("grpc.max_send_message_length", 512 * 1024 * 1024),
+                ("grpc.max_receive_message_length", 512 * 1024 * 1024),
+            ],
+        )
         self._stub = cluster_pb2_grpc.ClusterManagerStub(self._channel)
         self.info(f"cluster channel started to {self.address}")
 

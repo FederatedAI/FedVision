@@ -99,6 +99,8 @@ def fl_trainer(
     config,
     algorithm_config,
 ):
+    from ppdet.core.workspace import load_config
+    from ppdet.utils.check import check_config, check_version
 
     logging.basicConfig(
         filename="trainer.log",
@@ -107,6 +109,7 @@ def fl_trainer(
         datefmt="%d-%M-%Y %H:%M:%S",
         level=logging.DEBUG,
     )
+
     with open(config) as f:
         config_json = json.load(f)
     max_iter = config_json["max_iter"]
@@ -131,25 +134,26 @@ def fl_trainer(
     trainer.start(place)
     logging.debug(f"trainer stared")
 
+    cfg = load_config(algorithm_config)
+    check_config(cfg)
+    check_version()
+
     logging.debug(f"loading data")
+
     image = fluid.layers.data(
-        name="image", shape=[3, None, None], dtype="float32", lod_level=0
+        name="image", shape=[-1, 3, -1, -1], dtype="float32", lod_level=0
     )
-    im_info = fluid.layers.data(
-        name="im_info", shape=[None, 3], dtype="float32", lod_level=0
-    )
-    im_id = fluid.layers.data(name="im_id", shape=[None, 1], dtype="int64", lod_level=0)
     gt_bbox = fluid.layers.data(
-        name="gt_bbox", shape=[None, 4], dtype="float32", lod_level=1
+        name="gt_bbox", shape=[-1, 50, 4], dtype="float32", lod_level=0
     )
     gt_class = fluid.layers.data(
-        name="gt_class", shape=[None, 1], dtype="int32", lod_level=1
+        name="gt_class", shape=[-1, 50], dtype="int32", lod_level=0
     )
-    is_crowd = fluid.layers.data(
-        name="is_crowd", shape=[None, 1], dtype="int32", lod_level=1
+    gt_score = fluid.layers.data(
+        name="gt_score", shape=[-1, 50], dtype="float32", lod_level=0
     )
     feeder = fluid.DataFeeder(
-        feed_list=[image, im_info, im_id, gt_bbox, gt_class, is_crowd], place=place
+        feed_list=[image, gt_bbox, gt_class, gt_score], place=place
     )
     logging.debug(f"data loader ready")
 

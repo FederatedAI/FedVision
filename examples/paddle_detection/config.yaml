@@ -2,9 +2,9 @@ job_type: paddle_fl
 job_config:
   proposal_wait_time: 5
   worker_num: 2
-  program: faster_rcnn
+  program: paddle_detection
   max_iter: 10
   inner_step: 1
   dataset: fl_fruit
   device: cuda
-algorithm_config: ../paddle_detection/demo.yaml
+algorithm_config: ./demo.yaml

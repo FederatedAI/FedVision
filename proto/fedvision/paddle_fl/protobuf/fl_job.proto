@@ -23,5 +23,6 @@ message PaddleFLWorkerTask {
   bytes target_names = 10;
   bytes strategy = 11;
   string config_string = 12;
+  string algorithm_config_string = 13;
 }
 

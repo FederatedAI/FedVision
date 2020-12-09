@@ -40,6 +40,7 @@ class FLTrainer(Task):
         target_names,
         strategy,
         config_string,
+        algorithm_config_string,
     ):
         super().__init__(job_id=job_id, task_id=task_id)
         self._scheduler_ep = scheduler_ep
@@ -54,6 +55,7 @@ class FLTrainer(Task):
         self._target_names = target_names
         self._strategy = strategy
         self._config_string = config_string
+        self._algorithm_config_string = algorithm_config_string
 
     @classmethod
     def deserialize(cls, pb: job_pb2.Task) -> "FLTrainer":
@@ -78,6 +80,7 @@ class FLTrainer(Task):
             target_names=worker_task_pb.target_names,
             strategy=worker_task_pb.strategy,
             config_string=worker_task_pb.config_string,
+            algorithm_config_string=worker_task_pb.algorithm_config_string,
         )
 
     async def exec(self, executor: Executor):
@@ -96,6 +99,7 @@ class FLTrainer(Task):
                 f"--target-names=target_names",
                 f"--strategy=strategy",
                 f"--config config.json",
+                f"--algorithm-config algorithm_config.yaml"
                 f">{executor.stdout} 2>{executor.stderr}",
             ]
         )
@@ -115,6 +119,8 @@ class FLTrainer(Task):
             f.write(self._strategy)
         with executor.working_dir.joinpath("config.json").open("w") as f:
             f.write(self._config_string)
+        with executor.working_dir.joinpath("algorithm_config.yaml").open("w") as f:
+            f.write(self._algorithm_config_string)
         returncode = await executor.execute(cmd)
         if returncode is None or returncode != 0:
             raise FedvisionWorkerException(
