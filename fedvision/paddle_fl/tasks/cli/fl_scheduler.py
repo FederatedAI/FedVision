@@ -15,6 +15,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import random
 import sys
 from pathlib import Path
@@ -196,8 +197,6 @@ class FLServerWatched(object):
 
 @click.command()
 @click.option("--scheduler-ep", type=str, required=True)
-@click.option("--worker-num", type=int, required=True)
-@click.option("--max-iter", type=int, required=True)
 @click.option(
     "--main-program",
     type=click.Path(exists=True, file_okay=True, dir_okay=False),
@@ -215,8 +214,6 @@ class FLServerWatched(object):
 )
 def fl_scheduler(
     scheduler_ep,
-    worker_num,
-    max_iter,
     startup_program,
     main_program,
     config,
@@ -228,6 +225,11 @@ def fl_scheduler(
         datefmt="%d-%M-%Y %H:%M:%S",
         level=logging.DEBUG,
     )
+    with open(config) as f:
+        config_dict = json.load(f)
+    max_iter = config_dict["max_iter"]
+    worker_num = config_dict["worker_num"]
+
     loop = asyncio.get_event_loop()
     scheduler = Scheduler(
         scheduler_ep=scheduler_ep,

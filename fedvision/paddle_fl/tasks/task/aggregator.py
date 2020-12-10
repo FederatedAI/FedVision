@@ -29,16 +29,12 @@ class FLAggregator(Task):
         job_id,
         task_id,
         scheduler_ep,
-        worker_num,
-        max_iter,
         main_program,
         startup_program,
         config_string,
     ):
         super().__init__(job_id=job_id, task_id=task_id)
         self._scheduler_ep = scheduler_ep
-        self._worker_num = worker_num
-        self._max_iter = max_iter
         self._main_program = main_program
         self._startup_program = startup_program
         self._config_string = config_string
@@ -55,8 +51,6 @@ class FLAggregator(Task):
             job_id=pb.job_id,
             task_id=pb.task_id,
             scheduler_ep=scheduler_task_pb.scheduler_ep,
-            worker_num=scheduler_task_pb.worker_num,
-            max_iter=scheduler_task_pb.max_iter,
             startup_program=scheduler_task_pb.startup_program,
             main_program=scheduler_task_pb.main_program,
             config_string=scheduler_task_pb.config_string,
@@ -68,8 +62,6 @@ class FLAggregator(Task):
             [
                 f"{python_executable} -m fedvision.paddle_fl.tasks.cli.fl_scheduler",
                 f"--scheduler-ep={self._scheduler_ep}",
-                f"--worker-num={self._worker_num}",
-                f"--max-iter={self._max_iter}",
                 f"--startup-program=startup_program",
                 f"--main-program=main_program",
                 f"--config=config.json",

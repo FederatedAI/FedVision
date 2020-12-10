@@ -37,7 +37,6 @@ class PaddleFLJob(Job):
             proposal_wait_time=config["proposal_wait_time"],
             worker_num=config["worker_num"],
             program=config["program"],
-            max_iter=config["max_iter"],
             config=config,
             algorithm_config=algorithm_config,
         )
@@ -48,7 +47,6 @@ class PaddleFLJob(Job):
         program,
         proposal_wait_time,
         worker_num,
-        max_iter,
         config,
         algorithm_config,
     ):
@@ -62,8 +60,6 @@ class PaddleFLJob(Job):
 
         self._config_string = json.dumps(config)
         self._algorithm_config = algorithm_config
-
-        self._max_iter = max_iter
 
     @property
     def resource_required(self):
@@ -163,8 +159,6 @@ class PaddleFLJob(Job):
     def _generate_aggregator_task_pb(self):
         scheduler_pb = fl_job_pb2.PaddleFLAggregatorTask(
             scheduler_ep=self._aggregator_endpoint,
-            worker_num=self._worker_num,
-            max_iter=self._max_iter,
         )
         scheduler_pb.main_program = _load_program_bytes(
             self.compile_path.joinpath(f"compile/server0/server.main.program")

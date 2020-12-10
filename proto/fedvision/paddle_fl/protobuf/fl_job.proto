@@ -3,13 +3,11 @@ package fedvision.paddle_fl;
 
 message PaddleFLAggregatorTask {
   string scheduler_ep = 1;
-  uint32 worker_num = 3;
-  uint32 max_iter = 4;
 
-  bytes main_program = 5;
-  bytes startup_program = 6;
+  bytes main_program = 2;
+  bytes startup_program = 3;
 
-  string config_string = 7;
+  string config_string = 4;
 }
 
 
