@@ -30,9 +30,7 @@ import json
 import logging
 
 import click
-import paddle.fluid as fluid
 
-from fedvision.paddle_fl.data.loader import DataReader
 from fedvision.paddle_fl.tasks._trainer import FedAvgTrainer
 
 
@@ -76,6 +74,11 @@ from fedvision.paddle_fl.tasks._trainer import FedAvgTrainer
     required=True,
 )
 @click.option(
+    "--feeds",
+    type=click.Path(exists=True, file_okay=True, dir_okay=False),
+    required=True,
+)
+@click.option(
     "--config",
     type=click.Path(exists=True, file_okay=True, dir_okay=False),
     required=True,
@@ -96,10 +99,16 @@ def fl_trainer(
     feed_names,
     target_names,
     strategy,
+    feeds,
     config,
     algorithm_config,
 ):
+    import numpy as np
+    import paddle.fluid as fluid
+
     from ppdet.core.workspace import load_config
+    from ppdet.data import create_reader
+    from ppdet.utils import checkpoint
     from ppdet.utils.check import check_config, check_version
 
     logging.basicConfig(
@@ -113,8 +122,9 @@ def fl_trainer(
     with open(config) as f:
         config_json = json.load(f)
     max_iter = config_json["max_iter"]
-    dataset_dir = config_json["dataset"]
     device = config_json.get("device", "cpu")
+    use_vdl = config_json.get("use_vdl", False)
+
     logging.debug(f"training program begin")
     trainer = FedAvgTrainer(scheduler_ep=scheduler_ep, trainer_ep=trainer_ep)
     logging.debug(f"job program loading")
@@ -139,26 +149,20 @@ def fl_trainer(
     check_version()
 
     logging.debug(f"loading data")
-
-    image = fluid.layers.data(
-        name="image", shape=[-1, 3, -1, -1], dtype="float32", lod_level=0
-    )
-    gt_bbox = fluid.layers.data(
-        name="gt_bbox", shape=[-1, 50, 4], dtype="float32", lod_level=0
-    )
-    gt_class = fluid.layers.data(
-        name="gt_class", shape=[-1, 50], dtype="int32", lod_level=0
-    )
-    gt_score = fluid.layers.data(
-        name="gt_score", shape=[-1, 50], dtype="float32", lod_level=0
-    )
-    feeder = fluid.DataFeeder(
-        feed_list=[image, gt_bbox, gt_class, gt_score], place=place
-    )
+    feed_list = trainer.load_feed_list(feeds)
+    feeder = fluid.DataFeeder(feed_list=feed_list, place=place)
     logging.debug(f"data loader ready")
 
     epoch_id = -1
     step = 0
+    data_loader = create_reader(
+        cfg.TrainReader, max_iter, cfg, devices_num=1, num_trainers=1
+    )
+
+    if use_vdl:
+        from visualdl import LogWriter
+
+        vdl_writer = LogWriter("vdl_log")
 
     while epoch_id < max_iter:
         epoch_id += 1
@@ -167,18 +171,27 @@ def fl_trainer(
             continue
 
         logging.debug(f"epoch {epoch_id} start train")
-        dataset = DataReader(trainer_id, dataset=dataset_dir)
-        data_loader = dataset.data_loader()
-        for step_id, data in enumerate(data_loader):
-            acc = trainer.run(feeder.feed(data), fetch=["sum_0.tmp_0"])
+
+        for step_id, data in enumerate(data_loader()):
+            outs = trainer.run(feeder.feed(data), fetch=trainer._target_names)
+            if use_vdl:
+                stats = {
+                    k: np.array(v).mean() for k, v in zip(trainer._target_names, outs)
+                }
+                for loss_name, loss_value in stats.items():
+                    vdl_writer.add_scalar(loss_name, loss_value, step)
             step += 1
-            logging.debug(f"step: {step}, loss: {acc}")
+            logging.debug(f"step: {step}, outs: {outs}")
 
         # save model
+        logging.debug(f"saving model at {epoch_id}-th epoch")
         trainer.save_model(f"model/{epoch_id}")
 
         # info scheduler
         trainer.scheduler_agent.finish()
+        checkpoint.save(trainer.exe, trainer._main_program, f"checkpoint/{epoch_id}")
+
+    logging.debug(f"reach max iter, finish training")
 
 
 if __name__ == "__main__":

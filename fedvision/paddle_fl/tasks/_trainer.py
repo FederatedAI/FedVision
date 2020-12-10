@@ -106,6 +106,14 @@ class FedAvgTrainer(FLJobBase):
         self._feed_names = self._load_str_list(feed_names)
         self._target_names = self._load_str_list(target_names)
 
+    def load_feed_list(self, feeds_path):
+        data = []
+        with open(feeds_path, "rb") as f:
+            num = pickle.load(f)
+            for _ in range(num):
+                data.append(fluid.data(**pickle.load(f)))
+        return data
+
     @staticmethod
     def _load_strategy(input_file):
 
@@ -151,4 +159,13 @@ class FedAvgTrainer(FLJobBase):
         return loss
 
     def save_model(self, model_path):
-        fluid.save(self._main_program, model_path)
+        fluid.io.save_inference_model(
+            dirname=model_path,
+            feeded_var_names=self._feed_names,
+            target_vars=[
+                self._main_program.global_block().var(fetch_var_name)
+                for fetch_var_name in self._target_names
+            ],
+            executor=self.exe,
+            main_program=self._main_program,
+        )

@@ -208,12 +208,18 @@ class FLServerWatched(object):
     type=click.Path(exists=True, file_okay=True, dir_okay=False),
     required=True,
 )
+@click.option(
+    "--config",
+    type=click.Path(exists=True, file_okay=True, dir_okay=False),
+    required=True,
+)
 def fl_scheduler(
     scheduler_ep,
     worker_num,
     max_iter,
     startup_program,
     main_program,
+    config,
 ):
     logging.basicConfig(
         filename="aggregator.log",

@@ -39,6 +39,7 @@ class FLTrainer(Task):
         feed_names,
         target_names,
         strategy,
+        feeds,
         config_string,
         algorithm_config_string,
     ):
@@ -54,6 +55,7 @@ class FLTrainer(Task):
         self._feed_names = feed_names
         self._target_names = target_names
         self._strategy = strategy
+        self._feeds = feeds
         self._config_string = config_string
         self._algorithm_config_string = algorithm_config_string
 
@@ -79,6 +81,7 @@ class FLTrainer(Task):
             feed_names=worker_task_pb.feed_names,
             target_names=worker_task_pb.target_names,
             strategy=worker_task_pb.strategy,
+            feeds=worker_task_pb.feeds,
             config_string=worker_task_pb.config_string,
             algorithm_config_string=worker_task_pb.algorithm_config_string,
         )
@@ -97,6 +100,7 @@ class FLTrainer(Task):
                 f"--recv-program=recv_program",
                 f"--feed-names=feed_names",
                 f"--target-names=target_names",
+                f"--feeds=feeds",
                 f"--strategy=strategy",
                 f"--config config.json",
                 f"--algorithm-config algorithm_config.yaml"
@@ -117,6 +121,8 @@ class FLTrainer(Task):
             f.write(self._target_names)
         with executor.working_dir.joinpath("strategy").open("wb") as f:
             f.write(self._strategy)
+        with executor.working_dir.joinpath("feeds").open("wb") as f:
+            f.write(self._feeds)
         with executor.working_dir.joinpath("config.json").open("w") as f:
             f.write(self._config_string)
         with executor.working_dir.joinpath("algorithm_config.yaml").open("w") as f:

@@ -21,7 +21,9 @@ import logging
 import click
 from paddle import fluid
 
-from fedvision.paddle_fl.tasks.cli.paddle_detection._empty_optimizer import EmptyOptimizer
+from fedvision.paddle_fl.tasks.cli.paddle_detection._empty_optimizer import (
+    EmptyOptimizer,
+)
 from paddle_fl.paddle_fl.core.master.job_generator import JobGenerator
 from paddle_fl.paddle_fl.core.strategy.fl_strategy_base import (
     FedAvgStrategy,
@@ -53,6 +55,8 @@ class Model(object):
                 model = create(cfg.architecture)
 
                 inputs_def = cfg["TrainReader"]["inputs_def"]
+                # can't compile with dataloader now.
+                inputs_def["use_dataloader"] = False
                 feed_vars, _ = model.build_inputs(**inputs_def)
 
                 train_fetches = model.train(feed_vars)
@@ -93,6 +97,7 @@ def fl_master(algorithm_config, ps_endpoint, num_worker, config):
     job_generator.set_infer_feed_and_target_names(
         [name for name in model.feeds], [model.loss.name]
     )
+    job_generator.set_feeds(model.feeds.values())
 
     strategy = FedAvgStrategy()
     strategy.fed_avg = True

@@ -33,6 +33,7 @@ class FLAggregator(Task):
         max_iter,
         main_program,
         startup_program,
+        config_string,
     ):
         super().__init__(job_id=job_id, task_id=task_id)
         self._scheduler_ep = scheduler_ep
@@ -40,6 +41,7 @@ class FLAggregator(Task):
         self._max_iter = max_iter
         self._main_program = main_program
         self._startup_program = startup_program
+        self._config_string = config_string
 
     @classmethod
     def deserialize(cls, pb: job_pb2.Task) -> "FLAggregator":
@@ -57,6 +59,7 @@ class FLAggregator(Task):
             max_iter=scheduler_task_pb.max_iter,
             startup_program=scheduler_task_pb.startup_program,
             main_program=scheduler_task_pb.main_program,
+            config_string=scheduler_task_pb.config_string,
         )
 
     async def exec(self, executor: Executor):
@@ -69,6 +72,7 @@ class FLAggregator(Task):
                 f"--max-iter={self._max_iter}",
                 f"--startup-program=startup_program",
                 f"--main-program=main_program",
+                f"--config=config.json",
                 f">{executor.stdout} 2>{executor.stderr}",
             ]
         )
@@ -76,6 +80,8 @@ class FLAggregator(Task):
             f.write(self._main_program)
         with executor.working_dir.joinpath("startup_program").open("wb") as f:
             f.write(self._startup_program)
+        with executor.working_dir.joinpath("config.json").open("w") as f:
+            f.write(self._config_string)
         returncode = await executor.execute(cmd)
         if returncode != 0:
             raise FedvisionWorkerException(

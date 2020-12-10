@@ -148,6 +148,9 @@ class PaddleFLJob(Job):
             strategy=_load_program_bytes(
                 self.compile_path.joinpath(f"compile/trainer{i}/strategy.pkl")
             ),
+            feeds=_load_program_bytes(
+                self.compile_path.joinpath(f"compile/trainer{1}/feeds.pkl")
+            ),
             config_string=self._config_string,
             algorithm_config_string=self._algorithm_config,
         )
@@ -169,6 +172,7 @@ class PaddleFLJob(Job):
         scheduler_pb.startup_program = _load_program_bytes(
             self.compile_path.joinpath(f"compile/server0/server.startup.program")
         )
+        scheduler_pb.config_string = self._config_string
 
         task_pb = job_pb2.Task(
             job_id=self.job_id,

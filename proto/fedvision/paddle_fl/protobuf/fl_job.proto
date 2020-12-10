@@ -5,8 +5,11 @@ message PaddleFLAggregatorTask {
   string scheduler_ep = 1;
   uint32 worker_num = 3;
   uint32 max_iter = 4;
+
   bytes main_program = 5;
   bytes startup_program = 6;
+
+  string config_string = 7;
 }
 
 
@@ -15,6 +18,7 @@ message PaddleFLWorkerTask {
   uint32 trainer_id = 2;
   string trainer_ep = 3;
   string entrypoint = 4;
+
   bytes main_program = 5;
   bytes startup_program = 6;
   bytes send_program = 7;
@@ -22,7 +26,9 @@ message PaddleFLWorkerTask {
   bytes feed_names = 9;
   bytes target_names = 10;
   bytes strategy = 11;
-  string config_string = 12;
-  string algorithm_config_string = 13;
+  bytes feeds = 12;
+
+  string config_string = 13;
+  string algorithm_config_string = 14;
 }
 
