@@ -91,6 +91,9 @@ class FLCompileTimeJob(FLJobBase):
     def set_feed_names(self, names):
         self._feed_names = names
 
+    def set_feeds(self, feeds):
+        self._feeds = feeds
+
     def set_target_names(self, names):
         self._target_names = names
 
@@ -139,6 +142,22 @@ class FLCompileTimeJob(FLJobBase):
                 self._server_endpoints, "%s/endpoints" % trainer_folder
             )
             self._save_strategy(self._strategy, "%s/strategy.pkl" % trainer_folder)
+
+            # save feed_variable
+            import pickle
+
+            with open(f"{trainer_folder}/feeds.pkl", "wb") as f:
+                pickle.dump(len(self._feeds), f)
+                for feed in self._feeds:
+                    pickle.dump(
+                        obj={
+                            "name": feed.name,
+                            "shape": feed.shape,
+                            "dtype": feed.dtype,
+                            "lod_level": feed.lod_level,
+                        },
+                        file=f,
+                    )
 
         for i in range(send_prog_num):
             trainer_folder = "%s/trainer%d" % (folder, i)

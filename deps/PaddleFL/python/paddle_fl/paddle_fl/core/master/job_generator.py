@@ -30,8 +30,7 @@ class JobGenerator(object):
         # startup program
         self._startup_prog = None
         # inner optimizer
-        self._optimizer = \
-            fluid.optimizer.SGD(learning_rate=0.001)
+        self._optimizer = fluid.optimizer.SGD(learning_rate=0.001)
         self._feed_names = []
         self._target_names = []
 
@@ -58,11 +57,9 @@ class JobGenerator(object):
         self._startup_prog = startup
 
     def set_infer_feed_and_target_names(self, feed_names, target_names):
-        if not isinstance(feed_names, list) or not isinstance(target_names,
-                                                              list):
-            raise ValueError(
-                "input should be list in set_infer_feed_and_target_names")
-        '''
+        if not isinstance(feed_names, list) or not isinstance(target_names, list):
+            raise ValueError("input should be list in set_infer_feed_and_target_names")
+        """
         print(feed_names)
         print(target_names)
         for item in feed_names:
@@ -71,15 +68,16 @@ class JobGenerator(object):
         for item in target_names:
             if type(item) != str:
                 raise ValueError("item in target_names should be string")
-        '''
+        """
         self._feed_names = feed_names
         self._target_names = target_names
 
-    def generate_fl_job(self,
-                        fl_strategy,
-                        server_endpoints=[],
-                        worker_num=1,
-                        output=None):
+    def set_feeds(self, feeds):
+        self._feeds = feeds
+
+    def generate_fl_job(
+        self, fl_strategy, server_endpoints=[], worker_num=1, output=None
+    ):
         """
         Generate Federated Learning Job, based on user defined configs
 
@@ -139,7 +137,8 @@ class JobGenerator(object):
                 trainers=worker_num,
                 sync_mode=True,
                 startup_program=startup_program,
-                job=local_job)
+                job=local_job,
+            )
 
         startup_program = self._startup_prog.clone()
         main_program = self._losses[0].block.program.clone()
@@ -149,19 +148,23 @@ class JobGenerator(object):
             trainers=worker_num,
             sync_mode=True,
             startup_program=startup_program,
-            job=local_job)
+            job=local_job,
+        )
 
         local_job.set_feed_names(self._feed_names)
         local_job.set_target_names(self._target_names)
+        local_job.set_feeds(self._feeds)
         local_job.set_strategy(fl_strategy)
         local_job.save(output)
 
-    def generate_fl_job_for_k8s(self,
-                                fl_strategy,
-                                server_pod_endpoints=[],
-                                server_service_endpoints=[],
-                                worker_num=1,
-                                output=None):
+    def generate_fl_job_for_k8s(
+        self,
+        fl_strategy,
+        server_pod_endpoints=[],
+        server_service_endpoints=[],
+        worker_num=1,
+        output=None,
+    ):
 
         local_job = FLCompileTimeJob()
         assert len(self._losses) > 0
@@ -182,7 +185,8 @@ class JobGenerator(object):
                 trainers=worker_num,
                 sync_mode=True,
                 startup_program=startup_program,
-                job=local_job)
+                job=local_job,
+            )
 
         startup_program = self._startup_prog.clone()
         main_program = self._losses[0].block.program.clone()
@@ -192,21 +196,24 @@ class JobGenerator(object):
             trainers=worker_num,
             sync_mode=True,
             startup_program=startup_program,
-            job=local_job)
+            job=local_job,
+        )
 
         local_job.set_feed_names(self._feed_names)
         local_job.set_target_names(self._target_names)
         local_job.set_strategy(fl_strategy)
         local_job.save(output)
 
-    def save_program(self,
-                     main_prog,
-                     startup_prog,
-                     program_path,
-                     input_list,
-                     hidden_vars,
-                     loss,
-                     learning_rate=None):
+    def save_program(
+        self,
+        main_prog,
+        startup_prog,
+        program_path,
+        input_list,
+        hidden_vars,
+        loss,
+        learning_rate=None,
+    ):
         if not os.path.exists(program_path):
             os.makedirs(program_path)
         main_program_str = main_prog.desc.serialize_to_string()
@@ -215,54 +222,55 @@ class JobGenerator(object):
         para_info = []
         for pa in params:
             para_info.append(pa.name)
-        with open(program_path + '/input_names', 'w') as fout:
+        with open(program_path + "/input_names", "w") as fout:
             for input in input_list:
                 fout.write("%s\n" % input)
         if hidden_vars != None:
-            with open(program_path + '/hidden_vars', 'w') as fout:
+            with open(program_path + "/hidden_vars", "w") as fout:
                 for var in hidden_vars:
                     fout.write("%s:%s\n" % (var[0], var[1].name))
-        with open(program_path + '/para_info', 'w') as fout:
+        with open(program_path + "/para_info", "w") as fout:
             for item in para_info:
                 fout.write("%s\n" % item)
-        with open(program_path + '/startup_program', "wb") as fout:
+        with open(program_path + "/startup_program", "wb") as fout:
             fout.write(startup_program_str)
-        with open(program_path + '/main_program', "wb") as fout:
+        with open(program_path + "/main_program", "wb") as fout:
             fout.write(main_program_str)
-        with open(program_path + '/loss_name', 'w') as fout:
+        with open(program_path + "/loss_name", "w") as fout:
             fout.write(loss.name)
         if type(learning_rate) == fluid.Variable:
-            with open(program_path + '/lr_name', 'w') as fout:
+            with open(program_path + "/lr_name", "w") as fout:
                 fout.write(learning_rate.name)
 
-    def generate_fl_job_from_program(self, strategy, endpoints, worker_num,
-                                     program_input, output):
+    def generate_fl_job_from_program(
+        self, strategy, endpoints, worker_num, program_input, output
+    ):
         local_job = FLCompileTimeJob()
-        with open(program_input + '/startup_program', "rb") as fin:
+        with open(program_input + "/startup_program", "rb") as fin:
             program_desc_str = fin.read()
             new_startup = fluid.Program.parse_from_string(program_desc_str)
 
-        with open(program_input + '/main_program', "rb") as fin:
+        with open(program_input + "/main_program", "rb") as fin:
             program_desc_str = fin.read()
             new_main = fluid.Program.parse_from_string(program_desc_str)
 
         para_list = []
-        with open(program_input + '/para_info', 'r') as fin:
+        with open(program_input + "/para_info", "r") as fin:
             for line in fin:
                 current_para = line[:-1]
                 para_list.append(current_para)
 
         input_list = []
-        with open(program_input + '/input_names', 'r') as fin:
+        with open(program_input + "/input_names", "r") as fin:
             for line in fin:
                 current_input = line[:-1]
                 input_list.append(current_input)
 
-        with open(program_input + '/loss_name', 'r') as fin:
+        with open(program_input + "/loss_name", "r") as fin:
             loss_name = fin.read()
 
-        if os.path.exists(program_input + '/lr_name'):
-            with open(program_input + '/lr_name', 'r') as fin:
+        if os.path.exists(program_input + "/lr_name"):
+            with open(program_input + "/lr_name", "r") as fin:
                 lr_name = fin.read()
         else:
             lr_name = None
@@ -270,7 +278,7 @@ class JobGenerator(object):
         for item in para_list:
             para = new_main.global_block().var(item)
             para.regularizer = None
-            para.optimize_attr = {'learning_rate': 1.0}
+            para.optimize_attr = {"learning_rate": 1.0}
             para.trainable = True
         exe = fluid.Executor(fluid.CPUPlace())
         loss = None
@@ -284,12 +292,12 @@ class JobGenerator(object):
         with fluid.program_guard(new_main, new_startup):
             if lr_name != None:
                 optimizer = fluid.optimizer.MomentumOptimizer(
-                    learning_rate=lr, momentum=0.9, parameter_list=para_list)
+                    learning_rate=lr, momentum=0.9, parameter_list=para_list
+                )
             else:
                 optimizer = fluid.optimizer.MomentumOptimizer(
-                    learning_rate=0.00001,
-                    momentum=0.9,
-                    parameter_list=para_list)
+                    learning_rate=0.00001, momentum=0.9, parameter_list=para_list
+                )
 
             exe.run(new_startup)
             strategy.minimize(optimizer, loss)
@@ -304,7 +312,8 @@ class JobGenerator(object):
                 trainers=worker_num,
                 sync_mode=True,
                 startup_program=startup_program,
-                job=local_job)
+                job=local_job,
+            )
 
         startup_program = new_startup.clone()
         main_program = loss.block.program.clone()
@@ -314,7 +323,8 @@ class JobGenerator(object):
             trainers=worker_num,
             sync_mode=True,
             startup_program=startup_program,
-            job=local_job)
+            job=local_job,
+        )
 
         local_job.set_feed_names(input_list)
         local_job.set_target_names([loss.name])

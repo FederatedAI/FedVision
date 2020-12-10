@@ -69,12 +69,17 @@ def variable_to_code(var):
     Returns:
         string: The formatted string.
     """
-    if var.type == core.VarDesc.VarType.SELECTED_ROWS or var.type == core.VarDesc.VarType.LOD_TENSOR:
-        var_str = "{name} : fluid.{type}.shape{shape}.astype({dtype})".\
-            format(i="{", e="}", name=var.name, type=var.type, shape=var.shape, dtype=var.dtype)
+    if (
+        var.type == core.VarDesc.VarType.SELECTED_ROWS
+        or var.type == core.VarDesc.VarType.LOD_TENSOR
+    ):
+        var_str = "{name} : fluid.{type}.shape{shape}.astype({dtype})".format(
+            i="{", e="}", name=var.name, type=var.type, shape=var.shape, dtype=var.dtype
+        )
     else:
-        var_str = "{name} : fluid.{type})".\
-            format(i="{", e="}", name=var.name, type=var.type)
+        var_str = "{name} : fluid.{type})".format(
+            i="{", e="}", name=var.name, type=var.type
+        )
 
     if type(var) == paddle.fluid.framework.Parameter:
         if var.trainable:
@@ -130,7 +135,8 @@ def op_to_code(op, skip_op_callstack=True):
         attr_type = op.desc.attr_type(name)
         if attr_type == core.AttrType.BLOCK:
             a = "{name} = block[{value}]".format(
-                name=name, type=attr_type, value=op._block_attr_id(name))
+                name=name, type=attr_type, value=op._block_attr_id(name)
+            )
             attrs_str += a
             if i != len(attr_names) - 1:
                 attrs_str += ", "
@@ -138,24 +144,28 @@ def op_to_code(op, skip_op_callstack=True):
 
         if attr_type == core.AttrType.BLOCKS:
             a = "{name} = blocks{value}".format(
-                name=name, type=attr_type, value=op._blocks_attr_ids(name))
+                name=name, type=attr_type, value=op._blocks_attr_ids(name)
+            )
             attrs_str += a
             if i != len(attr_names) - 1:
                 attrs_str += ", "
             continue
 
         a = "{name} = {value}".format(
-            name=name, type=attr_type, value=op.desc.attr(name))
+            name=name, type=attr_type, value=op.desc.attr(name)
+        )
         attrs_str += a
         if i != len(attr_names) - 1:
             attrs_str += ", "
 
     if outputs_str != "{}":
-        op_str = "{outputs} = {op_type}(inputs={inputs}, {attrs})".\
-            format(outputs = outputs_str, op_type=op.type, inputs=inputs_str, attrs=attrs_str)
+        op_str = "{outputs} = {op_type}(inputs={inputs}, {attrs})".format(
+            outputs=outputs_str, op_type=op.type, inputs=inputs_str, attrs=attrs_str
+        )
     else:
-        op_str = "{op_type}(inputs={inputs}, {attrs})".\
-            format(op_type=op.type, inputs=inputs_str, attrs=attrs_str)
+        op_str = "{op_type}(inputs={inputs}, {attrs})".format(
+            op_type=op.type, inputs=inputs_str, attrs=attrs_str
+        )
     return op_str
 
 
@@ -163,29 +173,29 @@ def block_to_code(block, block_idx, fout=None, skip_op_callstack=False):
     indent = 0
 
     print(
-        "{0}{1} // block {2}".format(
-            get_indent_space(indent), '{', block_idx),
-        file=fout)
+        "{0}{1} // block {2}".format(get_indent_space(indent), "{", block_idx),
+        file=fout,
+    )
 
     indent += 1
     # sort all vars
     all_vars = sorted(six.iteritems(block.vars), key=lambda x: x[0])
     for var in all_vars:
         print(
-            "{}{}".format(get_indent_space(indent), variable_to_code(var[1])),
-            file=fout)
+            "{}{}".format(get_indent_space(indent), variable_to_code(var[1])), file=fout
+        )
 
     if len(all_vars) > 0:
         print("", file=fout)
 
     for op in block.ops:
         print(
-            "{}{}".format(
-                get_indent_space(indent), op_to_code(op, skip_op_callstack)),
-            file=fout)
+            "{}{}".format(get_indent_space(indent), op_to_code(op, skip_op_callstack)),
+            file=fout,
+        )
     indent -= 1
 
-    print("{0}{1}".format(get_indent_space(indent), '}'), file=fout)
+    print("{0}{1}".format(get_indent_space(indent), "}"), file=fout)
 
 
 def program_to_code(prog, fout=None, skip_op_callstack=True):

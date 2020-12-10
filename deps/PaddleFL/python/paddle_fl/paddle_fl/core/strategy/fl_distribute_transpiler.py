@@ -20,9 +20,16 @@ import sys
 import six
 from paddle.fluid import core, framework
 from paddle.fluid.distribute_lookup_table import find_distributed_lookup_table
-from paddle.fluid.framework import Program, default_main_program, \
-    default_startup_program, Parameter
-from paddle.fluid.transpiler.distribute_transpiler import DistributeTranspilerConfig, slice_variable
+from paddle.fluid.framework import (
+    Program,
+    default_main_program,
+    default_startup_program,
+    Parameter,
+)
+from paddle.fluid.transpiler.distribute_transpiler import (
+    DistributeTranspilerConfig,
+    slice_variable,
+)
 
 from .details import UnionFind, VarsDistributed
 from .details import delete_ops
@@ -31,8 +38,9 @@ from .details.ps_dispatcher import RoundRobin, PSDispatcher
 LOOKUP_TABLE_TYPE = "lookup_table"
 LOOKUP_TABLE_GRAD_TYPE = "lookup_table_grad"
 OP_ROLE_VAR_ATTR_NAME = core.op_proto_and_checker_maker.kOpRoleVarAttrName()
-RPC_OP_ROLE_ATTR_NAME = op_role_attr_name = core.op_proto_and_checker_maker.kOpRoleAttrName(
-)
+RPC_OP_ROLE_ATTR_NAME = (
+    op_role_attr_name
+) = core.op_proto_and_checker_maker.kOpRoleAttrName()
 OPT_OP_ROLE_ATTR_VALUE = core.op_proto_and_checker_maker.OpRole.Optimize
 RPC_OP_ROLE_ATTR_VALUE = core.op_proto_and_checker_maker.OpRole.RPC
 DIST_OP_ROLE_ATTR_VALUE = core.op_proto_and_checker_maker.OpRole.Dist
@@ -103,28 +111,27 @@ class FLDistributeTranspiler(object):
         global PRINT_LOG
         if self.config.print_log:
             PRINT_LOG = True
-        assert (self.config.min_block_size >= 8192)
-        assert (self.config.split_method.__bases__[0] == PSDispatcher)
+        assert self.config.min_block_size >= 8192
+        assert self.config.split_method.__bases__[0] == PSDispatcher
 
     def _get_all_remote_sparse_update_op(self, main_program):
         sparse_update_ops = []
-        sparse_update_op_types = [
-            "lookup_table", "nce", "hierarchical_sigmoid"
-        ]
+        sparse_update_op_types = ["lookup_table", "nce", "hierarchical_sigmoid"]
         for op in main_program.global_block().ops:
-            if op.type in sparse_update_op_types and op.attr(
-                    'remote_prefetch') is True:
+            if op.type in sparse_update_op_types and op.attr("remote_prefetch") is True:
                 sparse_update_ops.append(op)
         return sparse_update_ops
 
-    def transpile(self,
-                  trainer_id,
-                  program=None,
-                  pservers="127.0.0.1:6174",
-                  trainers=1,
-                  sync_mode=True,
-                  startup_program=None,
-                  current_endpoint="127.0.0.1:6174"):
+    def transpile(
+        self,
+        trainer_id,
+        program=None,
+        pservers="127.0.0.1:6174",
+        trainers=1,
+        sync_mode=True,
+        startup_program=None,
+        current_endpoint="127.0.0.1:6174",
+    ):
         """
         Run the transpiler. Transpile the input program.
 
@@ -183,7 +190,8 @@ class FLDistributeTranspiler(object):
 
         # get all sparse update ops
         self.sparse_update_ops = self._get_all_remote_sparse_update_op(
-            self.origin_program)
+            self.origin_program
+        )
         # use_sparse_update_param_name -> split_height_section
         self.sparse_param_to_height_sections = dict()
 
@@ -192,7 +200,9 @@ class FLDistributeTranspiler(object):
         self.origin_program._endpoints = self.pserver_endpoints
         self.origin_program._ps_endpoint = current_endpoint
         self.origin_program._is_chief = self.trainer_id == 0
-        self.origin_program._distributed_lookup_table = self.table_name if self.table_name else None
+        self.origin_program._distributed_lookup_table = (
+            self.table_name if self.table_name else None
+        )
 
         # split and create vars, then put splited vars in dicts for later use.
         # step 1: split and create vars, then put splited vars in dicts for later use.
@@ -221,7 +231,8 @@ class FLDistributeTranspiler(object):
             eplist = ps_dispatcher.dispatch([opti_var])
 
             dummy_output = program.global_block().create_var(
-                name=framework.generate_control_dev_var_name())
+                name=framework.generate_control_dev_var_name()
+            )
             self.opti_name_to_send_dummy_out[opti_varname] = dummy_output
 
             program.global_block().append_op(
@@ -231,15 +242,19 @@ class FLDistributeTranspiler(object):
                 attrs={
                     "epmap": eplist,
                     RPC_OP_ROLE_ATTR_NAME: RPC_OP_ROLE_ATTR_VALUE,
-                    OP_ROLE_VAR_ATTR_NAME:
-                    [self._opti_to_param[opti_varname], opti_varname],
+                    OP_ROLE_VAR_ATTR_NAME: [
+                        self._opti_to_param[opti_varname],
+                        opti_varname,
+                    ],
                     "sync_mode": not self.sync_mode,
-                })
+                },
+            )
             send_vars.append(opti_var)
 
         if self.sync_mode:
             send_barrier_out = program.global_block().create_var(
-                name=framework.generate_control_dev_var_name())
+                name=framework.generate_control_dev_var_name()
+            )
             input_deps = list(self.opti_name_to_send_dummy_out.values())
 
             program.global_block().append_op(
@@ -250,14 +265,14 @@ class FLDistributeTranspiler(object):
                     "endpoints": pserver_endpoints,
                     "sync_mode": self.sync_mode,
                     "trainer_id": self.trainer_id,
-                    RPC_OP_ROLE_ATTR_NAME: RPC_OP_ROLE_ATTR_VALUE
-                })
+                    RPC_OP_ROLE_ATTR_NAME: RPC_OP_ROLE_ATTR_VALUE,
+                },
+            )
 
         # step 3: insert recv op to receive parameters from parameter server
         recv_vars = []
         for _, var in enumerate(send_vars):
-            recv_vars.append(program.global_block().var(self._opti_to_param[
-                var.name]))
+            recv_vars.append(program.global_block().var(self._opti_to_param[var.name]))
         ps_dispatcher.reset()
         eplist = ps_dispatcher.dispatch(recv_vars)
         for i, ep in enumerate(eplist):
@@ -265,7 +280,8 @@ class FLDistributeTranspiler(object):
             self.param_grad_ep_mapping[ep]["opti"].append(send_vars[i])
 
             distributed_var = self.vars_overview.get_distributed_var_by_slice(
-                recv_vars[i].name)
+                recv_vars[i].name
+            )
             distributed_var.endpoint = ep
 
         # step4: Concat the parameters splits together after recv.
@@ -295,8 +311,9 @@ class FLDistributeTranspiler(object):
                     "trainer_id": self.trainer_id,
                     RPC_OP_ROLE_ATTR_NAME: RPC_OP_ROLE_ATTR_VALUE,
                     OP_ROLE_VAR_ATTR_NAME: [param_varname, opti_varname],
-                    "sync_mode": not self.sync_mode
-                })
+                    "sync_mode": not self.sync_mode,
+                },
+            )
 
         if self.sync_mode:
             # form a WAW dependency
@@ -308,8 +325,9 @@ class FLDistributeTranspiler(object):
                 attrs={
                     "endpoints": pserver_endpoints,
                     "trainer_id": self.trainer_id,
-                    RPC_OP_ROLE_ATTR_NAME: RPC_OP_ROLE_ATTR_VALUE
-                })
+                    RPC_OP_ROLE_ATTR_NAME: RPC_OP_ROLE_ATTR_VALUE,
+                },
+            )
 
         self._get_trainer_startup_program(recv_vars=recv_vars, eplist=eplist)
 
@@ -331,9 +349,9 @@ class FLDistributeTranspiler(object):
         self.origin_program.__str__()
 
         self.send_program = self.origin_program.clone()
-        compute_ops = self.send_program.global_block().ops[0:self.split_num]
+        compute_ops = self.send_program.global_block().ops[0 : self.split_num]
         delete_ops(self.send_program.global_block(), compute_ops)
-        send_ops = self.origin_program.global_block().ops[self.split_num:]
+        send_ops = self.origin_program.global_block().ops[self.split_num :]
         delete_ops(self.origin_program.global_block(), send_ops)
 
         return self.recv_program, self.origin_program, self.send_program
@@ -402,18 +420,17 @@ class FLDistributeTranspiler(object):
                 orig_var_name = v.name[:suff_idx]
             # NOTE: single_trainer_var must be created for multi-trainer
             # case to merge grads from multiple trainers
-            single_trainer_var = pserver_program.global_block().var(
-                orig_var_name)
+            single_trainer_var = pserver_program.global_block().var(orig_var_name)
 
             if self.sync_mode and self.trainer_num > 1:
                 for trainer_id in range(self.trainer_num):
                     var = pserver_program.global_block().create_var(
-                        name="%s.opti.trainer_%d" %
-                        (orig_var_name, trainer_id),
+                        name="%s.opti.trainer_%d" % (orig_var_name, trainer_id),
                         persistable=False,
                         type=v.type,
                         dtype=v.dtype,
-                        shape=v.shape)
+                        shape=v.shape,
+                    )
                     recv_inputs.append(var)
 
         # step 3
@@ -426,8 +443,7 @@ class FLDistributeTranspiler(object):
         # located on current pserver
         opt_op_on_pserver = []
         for _, op in enumerate(self.optimize_ops):
-            if self._is_optimizer_op(op) and self._is_opt_op_on_pserver(
-                    endpoint, op):
+            if self._is_optimizer_op(op) and self._is_opt_op_on_pserver(endpoint, op):
                 opt_op_on_pserver.append(op)
 
         # step 3.4
@@ -459,19 +475,23 @@ class FLDistributeTranspiler(object):
             if self.sync_mode and self.trainer_num > 1:
                 vars2merge = []
                 for i in range(self.trainer_num):
-                    per_trainer_name = "%s.opti.trainer_%d" % \
-                                       (optimize_target_param_name, i)
+                    per_trainer_name = "%s.opti.trainer_%d" % (
+                        optimize_target_param_name,
+                        i,
+                    )
                     vars2merge.append(pserver_block.vars[per_trainer_name])
                 per_opt_block.append_op(
                     type="sum",
                     inputs={"X": vars2merge},
                     outputs={"Out": merged_var},
-                    attrs={"use_mkldnn": False})
+                    attrs={"use_mkldnn": False},
+                )
                 per_opt_block.append_op(
                     type="scale",
                     inputs={"X": merged_var},
                     outputs={"Out": merged_var},
-                    attrs={"scale": 1.0 / float(self.trainer_num)})
+                    attrs={"scale": 1.0 / float(self.trainer_num)},
+                )
 
         # In some case, some parameter server will have no parameter to optimize
         # So we give an empty optimize block to parameter server.
@@ -485,19 +505,17 @@ class FLDistributeTranspiler(object):
         # step5 append the listen_and_serv op
         pserver_program.global_block().append_op(
             type="fl_listen_and_serv",
-            inputs={'X': recv_inputs},
+            inputs={"X": recv_inputs},
             outputs={},
-            attrs=attrs)
+            attrs=attrs,
+        )
 
         pserver_program._sync_with_cpp()
         # save pserver program to generate pserver side startup relatively.
         self.pserver_program = pserver_program
         return pserver_program
 
-    def get_startup_program(self,
-                            endpoint,
-                            pserver_program=None,
-                            startup_program=None):
+    def get_startup_program(self, endpoint, pserver_program=None, startup_program=None):
         """
         **Deprecated**
 
@@ -554,15 +572,18 @@ class FLDistributeTranspiler(object):
                 new_inputs = self._get_input_map_from_op(pserver_vars, op)
 
                 if op.type in [
-                        "gaussian_random", "fill_constant", "uniform_random",
-                        "truncated_gaussian_random"
+                    "gaussian_random",
+                    "fill_constant",
+                    "uniform_random",
+                    "truncated_gaussian_random",
                 ]:
                     op._set_attr("shape", list(new_outputs["Out"].shape))
                 s_prog.global_block().append_op(
                     type=op.type,
                     inputs=new_inputs,
                     outputs=new_outputs,
-                    attrs=op.all_attrs())
+                    attrs=op.all_attrs(),
+                )
 
         return s_prog
 
@@ -583,7 +604,8 @@ class FLDistributeTranspiler(object):
             opt_op_on_pserver = []
             for _, op in enumerate(self.optimize_ops):
                 if self._is_optimizer_op(op) and self._is_opt_op_on_pserver(
-                        endpoint, op):
+                    endpoint, op
+                ):
                     opt_op_on_pserver.append(op)
 
             for opt_op in opt_op_on_pserver:
@@ -591,8 +613,11 @@ class FLDistributeTranspiler(object):
                 for key in opt_op.input_names:
                     if key == "Param":
                         param_name = opt_op.input(key)[0]
-                        dist_var = self.vars_overview.get_distributed_var_by_origin_and_ep(
-                            param_name, endpoint)
+                        dist_var = (
+                            self.vars_overview.get_distributed_var_by_origin_and_ep(
+                                param_name, endpoint
+                            )
+                        )
                         break
                 for key in opt_op.input_names:
                     if key in ["Param", "Grad", "LearningRate"]:
@@ -601,8 +626,7 @@ class FLDistributeTranspiler(object):
         for ep in self.pserver_endpoints:
             _get_distributed_optimizer_var(ep)
 
-    def _update_dist_lookup_table_vars(self, param_list, grad_list,
-                                       params_grads):
+    def _update_dist_lookup_table_vars(self, param_list, grad_list, params_grads):
         # TODO(wuyi): put find a way to put dist lookup table stuff all together.
         # update self.table_param_grad and self.trainer_side_table_grad_list
         program = self.origin_program
@@ -631,28 +655,29 @@ class FLDistributeTranspiler(object):
 
         # To do : consider lookup table later
         param_list, grad_list = self._update_dist_lookup_table_vars(
-            param_list, grad_list, self.params_grads)
+            param_list, grad_list, self.params_grads
+        )
 
         if self.config.slice_var_up:
             # when we slice var up into blocks, we will slice the var according to
             # pserver services' count. A pserver may have two or more listening ports.
-            grad_blocks = slice_variable(grad_list,
-                                         len(self.pserver_endpoints),
-                                         self.config.min_block_size)
-            param_blocks = slice_variable(param_list,
-                                          len(self.pserver_endpoints),
-                                          self.config.min_block_size)
-        assert (len(grad_blocks) == len(param_blocks))
+            grad_blocks = slice_variable(
+                grad_list, len(self.pserver_endpoints), self.config.min_block_size
+            )
+            param_blocks = slice_variable(
+                param_list, len(self.pserver_endpoints), self.config.min_block_size
+            )
+        assert len(grad_blocks) == len(param_blocks)
 
         # origin_param_name -> [splited_param_vars]
         self.param_var_mapping = self._create_vars_from_blocklist(
-            self.origin_program, param_blocks)
+            self.origin_program, param_blocks
+        )
 
         for orig_name, splited_vars in self.param_var_mapping.items():
             orig_var = self.origin_program.global_block().var(orig_name)
             for splited_var in splited_vars:
-                is_slice, block_id, offset = self._get_slice_var_info(
-                    splited_var)
+                is_slice, block_id, offset = self._get_slice_var_info(splited_var)
 
                 self.vars_overview.add_distributed_var(
                     origin_var=orig_var,
@@ -660,48 +685,46 @@ class FLDistributeTranspiler(object):
                     block_id=block_id,
                     offset=offset,
                     is_slice=is_slice,
-                    vtype="Param")
+                    vtype="Param",
+                )
 
         # origin_grad_name -> [splited_grad_vars]
         self.grad_var_mapping = self._create_vars_from_blocklist(
-            self.origin_program, grad_blocks)
-        #add_trainer_suffix=self.trainer_num > 1)
+            self.origin_program, grad_blocks
+        )
+        # add_trainer_suffix=self.trainer_num > 1)
         # dict(grad_splited_var -> param_splited_var)
         self.grad_param_mapping = collections.OrderedDict()
         for g, p in zip(grad_blocks, param_blocks):
             g_name, g_bid, _ = g.split(":")
             p_name, p_bid, _ = p.split(":")
-            self.grad_param_mapping[self.grad_var_mapping[g_name][int(g_bid)]] = \
-                self.param_var_mapping[p_name][int(p_bid)]
+            self.grad_param_mapping[
+                self.grad_var_mapping[g_name][int(g_bid)]
+            ] = self.param_var_mapping[p_name][int(p_bid)]
 
         # create mapping of endpoint -> split var to create pserver side program
         self.param_grad_ep_mapping = collections.OrderedDict()
         [
-            self.param_grad_ep_mapping.update({
-                ep: {
-                    "params": [],
-                    "opti": []
-                }
-            }) for ep in self.pserver_endpoints
+            self.param_grad_ep_mapping.update({ep: {"params": [], "opti": []}})
+            for ep in self.pserver_endpoints
         ]
 
         opti_list = []
         opti_to_param = dict()
         param_to_opti = dict()
         for op in self.optimize_ops:
-            if (op.type == "sgd") or (op.type == "adam") or (
-                    op.type == "momentum"):
+            if (op.type == "sgd") or (op.type == "adam") or (op.type == "momentum"):
                 origin_name = op.output("ParamOut")
                 var = self.origin_program.global_block().var(origin_name[0])
-                new_var_name = "%s.opti.trainer_%d" % (origin_name[0],
-                                                       self.trainer_id)
+                new_var_name = "%s.opti.trainer_%d" % (origin_name[0], self.trainer_id)
                 self.origin_program.global_block().create_var(
                     name=new_var_name,
                     persistable=True,
                     shape=var.shape,
                     dtype=var.dtype,
                     type=var.type,
-                    lod_level=var.lod_level)
+                    lod_level=var.lod_level,
+                )
                 new_var = self.origin_program.global_block().var(new_var_name)
                 opti_list.append(new_var.name)
                 opti_to_param[new_var.name] = var.name
@@ -710,15 +733,15 @@ class FLDistributeTranspiler(object):
                     type="scale",
                     inputs={"X": var},
                     outputs={"Out": new_var},
-                    attrs={"scale": 1.0})
+                    attrs={"scale": 1.0},
+                )
         self._param_to_opti = param_to_opti
         self._opti_to_param = opti_to_param
         self._opti_var_list = opti_list
 
-    def _create_vars_from_blocklist(self,
-                                    program,
-                                    block_list,
-                                    add_trainer_suffix=False):
+    def _create_vars_from_blocklist(
+        self, program, block_list, add_trainer_suffix=False
+    ):
         """
         Create vars for each split.
         NOTE: only grads need to be named for different trainers, use
@@ -745,8 +768,7 @@ class FLDistributeTranspiler(object):
         for varname, splited in six.iteritems(block_map):
             orig_var = program.global_block().var(varname)
             if len(splited) == 1:
-                var_mapping[varname] = \
-                        [program.global_block().var(orig_var.name)]
+                var_mapping[varname] = [program.global_block().var(orig_var.name)]
                 continue
         return var_mapping
 
@@ -757,7 +779,8 @@ class FLDistributeTranspiler(object):
             dtype=var.dtype,
             type=var.type,
             lod_level=var.lod_level,
-            persistable=persistable)
+            persistable=persistable,
+        )
 
     def _get_varname_parts(self, varname):
         # returns origin, blockid, trainerid
@@ -766,23 +789,24 @@ class FLDistributeTranspiler(object):
         block_part = ""
         trainer_idx = varname.find(".trainer_")
         if trainer_idx >= 0:
-            trainer_part = varname[trainer_idx + 1:]
+            trainer_part = varname[trainer_idx + 1 :]
         else:
             trainer_idx = len(varname)
         block_index = varname.find(".block")
         if block_index >= 0:
-            block_part = varname[block_index + 1:trainer_idx]
+            block_part = varname[block_index + 1 : trainer_idx]
         else:
             block_index = len(varname)
-        orig_var_name = varname[0:min(block_index, trainer_idx)]
+        orig_var_name = varname[0 : min(block_index, trainer_idx)]
         return orig_var_name, block_part, trainer_part
 
     def _is_op_connected(self, op1, op2):
         # If one op's input is another op's output or
         # one op's output is another op's input, we say
         # the two operator is connected.
-        if set(op1.desc.output_arg_names()) & set(op2.desc.input_arg_names()) or \
-                set(op1.desc.input_arg_names()) & set(op2.desc.output_arg_names()):
+        if set(op1.desc.output_arg_names()) & set(op2.desc.input_arg_names()) or set(
+            op1.desc.input_arg_names()
+        ) & set(op2.desc.output_arg_names()):
             return True
         return False
 
@@ -798,15 +822,12 @@ class FLDistributeTranspiler(object):
         return ufind
 
     def _is_optimizer_op(self, op):
-        if "Param" in op.input_names and \
-                "LearningRate" in op.input_names:
+        if "Param" in op.input_names and "LearningRate" in op.input_names:
             return True
         return False
 
     def _is_opt_op_on_pserver(self, endpoint, op):
-        param_names = [
-            p.name for p in self.param_grad_ep_mapping[endpoint]["params"]
-        ]
+        param_names = [p.name for p in self.param_grad_ep_mapping[endpoint]["params"]]
         if op.input("Param")[0] in param_names:
             return True
 
@@ -827,8 +848,9 @@ class FLDistributeTranspiler(object):
         # optimize
         op_maker = core.op_proto_and_checker_maker
         optimize_role = core.op_proto_and_checker_maker.OpRole.Optimize
-        if op_maker.kOpRoleAttrName() in op.attr_names and \
-                int(op.all_attrs()[op_maker.kOpRoleAttrName()]) == int(optimize_role):
+        if op_maker.kOpRoleAttrName() in op.attr_names and int(
+            op.all_attrs()[op_maker.kOpRoleAttrName()]
+        ) == int(optimize_role):
             return True
         return False
 
@@ -854,8 +876,7 @@ class FLDistributeTranspiler(object):
                     if not param_name in optimize_params:
                         optimize_params.add(param_name)
                         log("adding param_grad pair: ", param_name, grad_name)
-                        params_grads.append([
-                            origin_var_dict[param_name],
-                            origin_var_dict[grad_name]
-                        ])
+                        params_grads.append(
+                            [origin_var_dict[param_name], origin_var_dict[grad_name]]
+                        )
         return opt_ops, params_grads
