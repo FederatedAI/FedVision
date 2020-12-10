@@ -1,4 +1,4 @@
-# Copyright (c) 2019 PaddlePaddle Authors. All Rights Reserved.
+# Copyright (c) 2020 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,63 +11,48 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import json
 import logging
 
 import click
 from paddle import fluid
 
-from fedvision.paddle_fl.tasks.cli.paddle_detection._empty_optimizer import (
-    EmptyOptimizer,
-)
 from paddle_fl.paddle_fl.core.master.job_generator import JobGenerator
 from paddle_fl.paddle_fl.core.strategy.fl_strategy_base import (
     FedAvgStrategy,
 )
 
 
-class Model(object):
+class CNN(object):
     def __init__(self):
-        self.feeds = None
-        self.startup_program = None
-        self.loss = None
+        inputs = fluid.layers.data(name="img", shape=[1, 28, 28], dtype="float64")
+        label = fluid.layers.data(name="label", shape=[1], dtype="int64")
+        conv_pool_1 = fluid.nets.simple_img_conv_pool(
+            input=inputs,
+            num_filters=20,
+            filter_size=5,
+            pool_size=2,
+            pool_stride=2,
+            act="relu",
+        )
+        conv_pool_2 = fluid.nets.simple_img_conv_pool(
+            input=conv_pool_1,
+            num_filters=50,
+            filter_size=5,
+            pool_size=2,
+            pool_stride=2,
+            act="relu",
+        )
+        predict = self.predict = fluid.layers.fc(
+            input=conv_pool_2, size=62, act="softmax"
+        )
+        cost = fluid.layers.cross_entropy(input=predict, label=label)
+        accuracy = fluid.layers.accuracy(input=predict, label=label)
+        self.loss = fluid.layers.mean(cost)
+        self.startup_program = fluid.default_startup_program()
 
-    def build_program(self, config):
-        from ppdet.core.workspace import load_config, create
-        from ppdet.utils.check import check_version, check_config
-
-        cfg = load_config(config)
-        check_config(cfg)
-        check_version()
-
-        lr_builder = create("LearningRate")
-        optimizer_builder = create("OptimizerBuilder")
-
-        # build program
-        self.startup_program = fluid.Program()
-        train_program = fluid.Program()
-        with fluid.program_guard(train_program, self.startup_program):
-            with fluid.unique_name.guard():
-                model = create(cfg.architecture)
-
-                inputs_def = cfg["TrainReader"]["inputs_def"]
-                # can't compile with dataloader now.
-                inputs_def["use_dataloader"] = False
-                feed_vars, _ = model.build_inputs(**inputs_def)
-
-                train_fetches = model.train(feed_vars)
-                loss = train_fetches["loss"]
-                lr = lr_builder()
-                optimizer = optimizer_builder(lr)
-                optimizer.minimize(loss)
-
-        self.loss = loss
-        self.feeds = feed_vars
+        self.feeds = [inputs, label]
+        self.targets = [self.loss, accuracy]
 
 
 @click.command()
@@ -89,22 +74,21 @@ def fl_master(algorithm_config, ps_endpoint, config):
     with open(config) as f:
         config_json = json.load(f)
     worker_num = config_json["worker_num"]
+    inner_step = config_json["inner_step"]
 
-    model = Model()
-    model.build_program(algorithm_config)
-
+    model = CNN()
     job_generator = JobGenerator()
     job_generator.set_losses([model.loss])
-    job_generator.set_optimizer(EmptyOptimizer())  # optimizer defined in Model
+    job_generator.set_optimizer(fluid.optimizer.Adam(0.001))
     job_generator.set_startup_program(model.startup_program)
     job_generator.set_infer_feed_and_target_names(
-        [name for name in model.feeds], [model.loss.name]
+        [feed.name for feed in model.feeds], [target.name for target in model.targets]
     )
-    job_generator.set_feeds(model.feeds.values())
+    job_generator.set_feeds(model.feeds)
 
     strategy = FedAvgStrategy()
     strategy.fed_avg = True
-    strategy.inner_step = 1
+    strategy._inner_step = inner_step
 
     endpoints = [ps_endpoint]
     output = "compile"

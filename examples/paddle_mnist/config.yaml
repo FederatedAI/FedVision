@@ -1,0 +1,10 @@
+job_type: paddle_fl
+job_config:
+  program: paddle_mnist
+  proposal_wait_time: 5
+  worker_num: 2
+  max_iter: 10
+  inner_step: 10
+  device: cpu
+  use_vdl: true
+algorithm_config: ./cnn.yml
