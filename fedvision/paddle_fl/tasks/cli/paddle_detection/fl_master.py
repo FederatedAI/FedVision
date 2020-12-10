@@ -16,6 +16,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import json
 import logging
 
 import click
@@ -71,7 +72,6 @@ class Model(object):
 
 @click.command()
 @click.option("--ps-endpoint", type=str, required=True)
-@click.option("--num-worker", type=int, required=True)
 @click.option(
     "-c",
     "--config",
@@ -81,11 +81,14 @@ class Model(object):
 @click.option(
     "--algorithm-config", type=click.Path(exists=True, file_okay=True, dir_okay=False)
 )
-def fl_master(algorithm_config, ps_endpoint, num_worker, config):
+def fl_master(algorithm_config, ps_endpoint, config):
     logging.basicConfig(
         level=logging.DEBUG, format="%(asctime)s-%(levelname)s: %(message)s"
     )
     logger = logging.getLogger(__name__)
+    with open("config.json") as f:
+        config_json = json.load(f)
+    worker_num = config_json["worker_num"]
 
     model = Model()
     model.build_program(algorithm_config)
@@ -106,7 +109,7 @@ def fl_master(algorithm_config, ps_endpoint, num_worker, config):
     endpoints = [ps_endpoint]
     output = "compile"
     job_generator.generate_fl_job(
-        strategy, server_endpoints=endpoints, worker_num=num_worker, output=output
+        strategy, server_endpoints=endpoints, worker_num=worker_num, output=output
     )
 
 

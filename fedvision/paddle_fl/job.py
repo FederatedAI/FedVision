@@ -85,7 +85,6 @@ class PaddleFLJob(Job):
         cmd = " ".join(
             [
                 f"{executable} -m fedvision.paddle_fl.tasks.cli.{self._program}.fl_master",
-                f"--num-worker {self._worker_num}",
                 f"--ps-endpoint {self._server_endpoint}",
                 f"--algorithm-config algorithm_config.yaml",
                 f"--config config.json",
