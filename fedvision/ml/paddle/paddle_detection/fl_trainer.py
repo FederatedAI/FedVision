@@ -31,7 +31,7 @@ import logging
 
 import click
 
-from fedvision.paddle_fl.tasks._trainer import FedAvgTrainer
+from fedvision.paddle_fl.tasks.utils import FedAvgTrainer
 
 
 @click.command()

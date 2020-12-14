@@ -23,7 +23,7 @@ from fedvision import __logs_dir__
 __BASE_LOGGER = None
 
 
-def set_logger(filename="fedvision"):
+def set_logger(filename="unnamed"):
     log_dir = Path(__logs_dir__)
     if not log_dir.exists():
         log_dir.mkdir(exist_ok=True)

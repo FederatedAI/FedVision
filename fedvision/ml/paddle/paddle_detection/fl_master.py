@@ -22,7 +22,7 @@ import logging
 import click
 from paddle import fluid
 
-from fedvision.paddle_fl.tasks.cli.paddle_detection._empty_optimizer import (
+from fedvision.ml.paddle.paddle_detection._empty_optimizer import (
     EmptyOptimizer,
 )
 from paddle_fl.paddle_fl.core.master.job_generator import JobGenerator

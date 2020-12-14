@@ -54,9 +54,7 @@ class PaddleFLJob(Job):
         self._proposal_wait_time = proposal_wait_time
         self._worker_num = worker_num
         self._program = program
-        self._trainer_entrypoint = (
-            f"fedvision.paddle_fl.tasks.cli.{self._program}.fl_trainer"
-        )
+        self._trainer_entrypoint = f"fedvision.ml.paddle.{self._program}.fl_trainer"
 
         self._config_string = json.dumps(config)
         self._algorithm_config = algorithm_config
@@ -84,7 +82,7 @@ class PaddleFLJob(Job):
         executable = sys.executable
         cmd = " ".join(
             [
-                f"{executable} -m fedvision.paddle_fl.tasks.cli.{self._program}.fl_master",
+                f"{executable} -m fedvision.ml.paddle.{self._program}.fl_master",
                 f"--ps-endpoint {self._server_endpoint}",
                 f"--algorithm-config algorithm_config.yaml",
                 f"--config config.json",
