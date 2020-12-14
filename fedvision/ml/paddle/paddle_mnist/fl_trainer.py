@@ -28,11 +28,14 @@
 
 import json
 import logging
+import os
 
 import click
 import paddle
+import yaml
 
 from fedvision.paddle_fl.tasks.utils import FedAvgTrainer
+from fedvision import __data_dir__
 
 
 @click.command()
@@ -123,6 +126,11 @@ def fl_trainer(
     device = config_json.get("device", "cpu")
     use_vdl = config_json.get("use_vdl", False)
 
+    with open(algorithm_config) as f:
+        algorithm_config_dict = yaml.load(f)
+    batch_size = algorithm_config_dict.get("batch_size", 128)
+    need_shuffle = algorithm_config_dict.get("need_shuffle", True)
+
     logging.debug(f"training program begin")
     trainer = FedAvgTrainer(scheduler_ep=scheduler_ep, trainer_ep=trainer_ep)
     logging.debug(f"job program loading")
@@ -150,9 +158,24 @@ def fl_trainer(
     epoch_id = -1
     step = 0
 
-    mnist_loader = paddle.batch(
-        fluid.io.shuffle(paddle.dataset.mnist.train(), 1000), 128
+    reader = paddle.dataset.mnist.reader_creator(
+        image_filename=os.path.join(
+            __data_dir__,
+            "mnist",
+            "train-images-idx3-ubyte.gz",
+        ),
+        label_filename=os.path.join(
+            __data_dir__, "mnist", "train-labels-idx1-ubyte.gz"
+        ),
+        buffer_size=100,
     )
+    if need_shuffle:
+        reader = fluid.io.shuffle(
+            reader=reader,
+            buf_size=1000,
+        )
+
+    mnist_loader = paddle.batch(reader=reader, batch_size=batch_size)
 
     if use_vdl:
         from visualdl import LogWriter
