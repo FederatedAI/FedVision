@@ -12,5 +12,3 @@ logs/
 FedVision.egg-info/
 temp_data/
 *.org
-/data
-!/data/download.sh

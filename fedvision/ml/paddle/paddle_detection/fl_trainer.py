@@ -28,10 +28,12 @@
 
 import json
 import logging
+import os
 
 import click
 
 from fedvision.paddle_fl.tasks.utils import FedAvgTrainer
+from fedvision import __data_dir__
 
 
 @click.command()
@@ -155,9 +157,16 @@ def fl_trainer(
 
     epoch_id = -1
     step = 0
+
+    # redirect dataset path to Fedvision/data
+    cfg.TrainReader["dataset"].dataset_dir = os.path.join(
+        __data_dir__, cfg.TrainReader["dataset"].dataset_dir
+    )
+
     data_loader = create_reader(
         cfg.TrainReader, max_iter, cfg, devices_num=1, num_trainers=1
     )
+    logging.error(f"{cfg.TrainReader['dataset']}")
 
     if use_vdl:
         from visualdl import LogWriter

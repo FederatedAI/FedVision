@@ -1,4 +1,4 @@
-# Copyright (c) 2020 The FedVision Authors. All Rights Reserved.
+# Copyright (c) 2019 PaddlePaddle Authors. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,9 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+import sys
+import os.path as osp
+import logging
 
-__version__ = 0.1
-__basedir__ = os.path.dirname(os.path.abspath(__file__))
-__logs_dir__ = os.path.abspath(os.path.join(__basedir__, os.path.pardir, "logs"))
-__data_dir__ = os.path.abspath(os.path.join(__basedir__, os.path.pardir, "data"))
+# add python path of PadleDetection to sys.path
+parent_path = osp.abspath(
+    osp.join(__file__, osp.pardir, osp.pardir, osp.pardir, "deps", "PaddleDetection")
+)
+if parent_path not in sys.path:
+    sys.path.append(parent_path)
+
+from ppdet.utils.download import download_dataset
+
+logging.basicConfig(level=logging.INFO)
+
+download_path = osp.split(osp.realpath(sys.argv[0]))[0]
+download_dataset(download_path, "fruit")
