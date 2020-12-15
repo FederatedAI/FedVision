@@ -4,8 +4,10 @@
 *.egg-info
 dist/
 build/
-fedvision/framework/protobuf
-fedvision/paddle_fl/protobuf
+fedvision/framework/protobuf/*
+fedvision/paddle_fl/protobuf/*
+!fedvision/framework/protobuf/__init__.py
+!fedvision/paddle_fl/protobuf/__init__.py
 docs/apis/proto.md
 *.log
 logs/

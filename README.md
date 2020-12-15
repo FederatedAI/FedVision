@@ -21,31 +21,21 @@ create virtualenv and install requirements
 ```bash
 virtualenv .venv --python=3.7
 source .venv/bin/activate
+pip install -r requirements.txt
 pip install -r requirements_dev.txt
 ```
 
 build proto
 ```bash
-make protobuf
+python tools/protobuf build
 ```
 
-install FedVision in develop mode
+start service
 ```bash
-python setup.py develop
+sh bin/run.sh
 ```
-
-#### build docs
-
-we use [mkdocs](https://www.mkdocs.org/) with theme [mkdocs-material](https://squidfunk.github.io/mkdocs-material/) for documents generation.
-
-install mkdocs
+run examples
 ```bash
-pip install mkdocs, mkdocs-material, python-markdown-math
+cd examples/paddle_detection
+sh run.sh
 ```
-
-start serve
-```
-mkdocs serve
-```
-
-check localhost:8000 in browser

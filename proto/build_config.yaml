@@ -1,0 +1,13 @@
+proto:
+  - "fedvision/framework/protobuf/cluster.proto"
+  - "fedvision/framework/protobuf/coordinator.proto"
+  - "fedvision/framework/protobuf/job.proto"
+  - "fedvision/paddle_fl/protobuf/fl_job.proto"
+  - "fedvision/paddle_fl/protobuf/scheduler.proto"
+
+grpc:
+  - "fedvision/framework/protobuf/cluster.proto"
+  - "fedvision/framework/protobuf/coordinator.proto"
+  - "fedvision/framework/protobuf/job.proto"
+  - "fedvision/paddle_fl/protobuf/fl_job.proto"
+  - "fedvision/paddle_fl/protobuf/scheduler.proto"
