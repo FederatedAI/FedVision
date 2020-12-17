@@ -1,0 +1,43 @@
+machines:
+  - name: machine1
+    ip: 127.0.0.1
+    ssh_string: sage@127.0.0.1:22
+    base_dir: /data/projects/fedvision1
+    python_for_venv_create: python3 # use to create venv
+
+  - name: machine2
+    ip: 127.0.0.1
+    ssh_string: sage@127.0.0.1:22
+    base_dir: /data/projects/fedvision2
+    python_for_venv_create: python3
+
+# coordinator start/stop only if machine provided
+coordinator:
+  name: coordinator1
+  machine: machine1
+  ip: 127.0.0.1 # optional if machine provided
+  port: 10000
+
+
+clusters:
+  - name: cluster1
+    manager:
+      machine: machine1
+      port: 10001
+    workers:
+      - name: worker1
+        machine: machine1
+        ports: 12000-12999
+        max_tasks: 10
+      - name: worker2
+        machine: machine2
+        ports: 13000-13999
+        max_tasks: 10
+
+masters:
+  - name: master1
+    machine: machine1
+    submit_port: 10002
+    coordinator: coordinator1
+    cluster: cluster1
+
