@@ -65,14 +65,13 @@ extra_css:
 
 nav:
   - Home: index.md
-  - Get Started:
-      - install: install.md
   - Framework:
-      - schedular: framework/schedular.md
+      - overview: framework/overview.md
   - API:
-      - code:
+      - framework:
         - cluster: apis/cluster.md
         - coordinator: apis/coordinator.md
-      - protobuf: apis/proto.md
+        - master: apis/master.md
+      - proto buffer: apis/proto.md
   - Releases:
       - Changelog: release/change_log.md

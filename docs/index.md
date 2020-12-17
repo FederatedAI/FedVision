@@ -4,53 +4,32 @@
 [![codecov](https://codecov.io/gh/weiwee/FedVision/branch/master/graph/badge.svg?token=53P5W56MIJ)](https://codecov.io/gh/weiwee/FedVision)
 [![Documentation Status](https://readthedocs.com/projects/sagewei-fedvision/badge/?version=latest&token=b5f872239fae7a1fb71abee19971fa6916d14cc10af496affd92446f64a7f75f)](https://sagewei-fedvision.readthedocs-hosted.com/en/latest/?badge=latest)
 
-FedVison is a Visual Object Detection Platform Powered by Federated Learning
+FedVision is a Visual Object Detection Platform Powered by Federated Learning
 
 
 ### quick start
 
-#### install
+1. install deploy toolkit
 
-![install](img/install.gif)
+    ``` bash
+    pip install -U pip && pip install fedvision_deploy_toolkit
+    ```
 
-clone repos
-``` bash
-git clone --recursive https://github.com/weiwee/FedVision.git
-cd FedVision
-```
+2. generate deploy template
 
-create virtualenv and install requirements
-```bash
-virtualenv .venv --python=3.6
-source .venv/bin/activate
-pip install -r requirements.txt
-```
+    ```bash
+    fedvision-deploy template generate
+    ```
 
-install FedVision in develop mode
-```bash
-python setup.py develop
-```
+3. modify generated template `deploy_config_template.yaml` according to comments.
 
-run scripts
-```bash
-compile --ppdet -c configs/yolov3_mobilenet_v1_fruit.yml
-scheduler
-server
-triner --ppdet -c configs/yolov3_mobilenet_v1_fruit.yml
-```
+4. start service
+    
+   ```bash
+   fedvision-deploy deploy deploy deploy_config_template.yaml
+   ```
+5. run examples in deploy directory
 
-#### build docs
+   1) download data with script in ${deploy_dir}/data
+   2) run examples with script in ${deploy_dir}/examples
 
-we use [mkdocs](https://www.mkdocs.org/) with theme [mkdocs-material](https://squidfunk.github.io/mkdocs-material/) for documents generation.
-
-install mkdocs
-```bash
-pip install mkdocs, mkdocs-material, python-markdown-math
-```
-
-start serve
-```
-mkdocs serve
-```
-
-check localhost:8000 in browser
