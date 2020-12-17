@@ -67,6 +67,8 @@ nav:
   - Home: index.md
   - Framework:
       - overview: framework/overview.md
+  - Deploy:
+      - cli: deploy/cli.md
   - API:
       - framework:
         - cluster: apis/cluster.md

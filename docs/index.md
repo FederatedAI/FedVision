@@ -25,11 +25,13 @@ FedVision is a Visual Object Detection Platform Powered by Federated Learning
 
 4. start service
     
-   ```bash
-   fedvision-deploy deploy deploy deploy_config_template.yaml
-   ```
+    ```bash
+    fedvision-deploy deploy deploy deploy_config_template.yaml
+    ```
+
 5. run examples in deploy directory
 
-   1) download data with script in ${deploy_dir}/data
-   2) run examples with script in ${deploy_dir}/examples
+    1) download data with script in ${deploy_dir}/data
+   
+    2) run examples with script in ${deploy_dir}/examples
 
