@@ -232,26 +232,6 @@
     quick start
   </a>
   
-    <nav class="md-nav" aria-label="quick start">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#install" class="md-nav__link">
-    install
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#build-docs" class="md-nav__link">
-    build docs
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
         
       </ul>
@@ -275,13 +255,13 @@
     
     <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" >
     <label class="md-nav__link" for="nav-2">
-      Get Started
+      Framework
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Get Started" data-md-level="1">
+    <nav class="md-nav" aria-label="Framework" data-md-level="1">
       <label class="md-nav__title" for="nav-2">
         <span class="md-nav__icon md-icon"></span>
-        Get Started
+        Framework
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -292,8 +272,8 @@
 
 
   <li class="md-nav__item">
-    <a href="install/" class="md-nav__link">
-      install
+    <a href="framework/overview/" class="md-nav__link">
+      overview
     </a>
   </li>
 
@@ -312,13 +292,13 @@
     
     <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" >
     <label class="md-nav__link" for="nav-3">
-      Framework
+      Deploy
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Framework" data-md-level="1">
+    <nav class="md-nav" aria-label="Deploy" data-md-level="1">
       <label class="md-nav__title" for="nav-3">
         <span class="md-nav__icon md-icon"></span>
-        Framework
+        Deploy
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -329,8 +309,8 @@
 
 
   <li class="md-nav__item">
-    <a href="framework/schedular/" class="md-nav__link">
-      schedular
+    <a href="deploy/cli/" class="md-nav__link">
+      cli
     </a>
   </li>
 
@@ -369,13 +349,13 @@
     
     <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4-1" type="checkbox" id="nav-4-1" >
     <label class="md-nav__link" for="nav-4-1">
-      code
+      framework
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="code" data-md-level="2">
+    <nav class="md-nav" aria-label="framework" data-md-level="2">
       <label class="md-nav__title" for="nav-4-1">
         <span class="md-nav__icon md-icon"></span>
-        code
+        framework
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -404,6 +384,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="apis/master/" class="md-nav__link">
+      master
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -416,7 +408,7 @@
 
   <li class="md-nav__item">
     <a href="apis/proto/" class="md-nav__link">
-      protobuf
+      proto buffer
     </a>
   </li>
 
@@ -497,26 +489,6 @@
     quick start
   </a>
   
-    <nav class="md-nav" aria-label="quick start">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#install" class="md-nav__link">
-    install
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#build-docs" class="md-nav__link">
-    build docs
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
         
       </ul>
@@ -547,37 +519,33 @@
 <p><a href="https://travis-ci.com/weiwee/FedVision"><img alt="Build Status" src="https://travis-ci.com/weiwee/FedVision.svg?token=M1cDYtJimwVq7j3Qq2c1&amp;branch=master" /></a>
 <a href="https://codecov.io/gh/weiwee/FedVision"><img alt="codecov" src="https://codecov.io/gh/weiwee/FedVision/branch/master/graph/badge.svg?token=53P5W56MIJ" /></a>
 <a href="https://sagewei-fedvision.readthedocs-hosted.com/en/latest/?badge=latest"><img alt="Documentation Status" src="https://readthedocs.com/projects/sagewei-fedvision/badge/?version=latest&amp;token=b5f872239fae7a1fb71abee19971fa6916d14cc10af496affd92446f64a7f75f" /></a></p>
-<p>FedVison is a Visual Object Detection Platform Powered by Federated Learning</p>
+<p>FedVision is a Visual Object Detection Platform Powered by Federated Learning</p>
 <h3 id="quick-start">quick start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h3>
-<h4 id="install">install<a class="headerlink" href="#install" title="Permanent link">&para;</a></h4>
-<p><img alt="install" src="img/install.gif" /></p>
-<p>clone repos
-<div class="highlight"><pre><span></span><code>git clone --recursive https://github.com/weiwee/FedVision.git
-<span class="nb">cd</span> FedVision
-</code></pre></div></p>
-<p>create virtualenv and install requirements
-<div class="highlight"><pre><span></span><code>virtualenv .venv --python<span class="o">=</span><span class="m">3</span>.6
-<span class="nb">source</span> .venv/bin/activate
-pip install -r requirements.txt
-</code></pre></div></p>
-<p>install FedVision in develop mode
-<div class="highlight"><pre><span></span><code>python setup.py develop
-</code></pre></div></p>
-<p>run scripts
-<div class="highlight"><pre><span></span><code>compile --ppdet -c configs/yolov3_mobilenet_v1_fruit.yml
-scheduler
-server
-triner --ppdet -c configs/yolov3_mobilenet_v1_fruit.yml
-</code></pre></div></p>
-<h4 id="build-docs">build docs<a class="headerlink" href="#build-docs" title="Permanent link">&para;</a></h4>
-<p>we use <a href="https://www.mkdocs.org/">mkdocs</a> with theme <a href="https://squidfunk.github.io/mkdocs-material/">mkdocs-material</a> for documents generation.</p>
-<p>install mkdocs
-<div class="highlight"><pre><span></span><code>pip install mkdocs, mkdocs-material, python-markdown-math
-</code></pre></div></p>
-<p>start serve
-<div class="highlight"><pre><span></span><code>mkdocs serve
-</code></pre></div></p>
-<p>check localhost:8000 in browser</p>
+<ol>
+<li>
+<p>install deploy toolkit</p>
+<div class="highlight"><pre><span></span><code>pip install -U pip <span class="o">&amp;&amp;</span> pip install fedvision_deploy_toolkit
+</code></pre></div>
+</li>
+<li>
+<p>generate deploy template</p>
+<div class="highlight"><pre><span></span><code>fedvision-deploy template generate
+</code></pre></div>
+</li>
+<li>
+<p>modify generated template <code>deploy_config_template.yaml</code> according to comments.</p>
+</li>
+<li>
+<p>start service</p>
+<div class="highlight"><pre><span></span><code>fedvision-deploy deploy deploy deploy_config_template.yaml
+</code></pre></div>
+</li>
+<li>
+<p>run examples in deploy directory</p>
+<p>1) download data with script in ${deploy_dir}/data</p>
+<p>2) run examples with script in ${deploy_dir}/examples</p>
+</li>
+</ol>
                 
               
               
@@ -597,13 +565,13 @@ triner --ppdet -c configs/yolov3_mobilenet_v1_fruit.yml
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
         
-          <a href="install/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
+          <a href="framework/overview/" class="md-footer-nav__link md-footer-nav__link--next" rel="next">
             <div class="md-footer-nav__title">
               <div class="md-ellipsis">
                 <span class="md-footer-nav__direction">
                   Next
                 </span>
-                install
+                overview
               </div>
             </div>
             <div class="md-footer-nav__button md-icon">

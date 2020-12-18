@@ -208,13 +208,13 @@
     
     <input class="md-nav__toggle md-toggle" data-md-toggle="nav-2" type="checkbox" id="nav-2" >
     <label class="md-nav__link" for="nav-2">
-      Get Started
+      Framework
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Get Started" data-md-level="1">
+    <nav class="md-nav" aria-label="Framework" data-md-level="1">
       <label class="md-nav__title" for="nav-2">
         <span class="md-nav__icon md-icon"></span>
-        Get Started
+        Framework
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -225,8 +225,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../install/" class="md-nav__link">
-      install
+    <a href="../../framework/overview/" class="md-nav__link">
+      overview
     </a>
   </li>
 
@@ -245,13 +245,13 @@
     
     <input class="md-nav__toggle md-toggle" data-md-toggle="nav-3" type="checkbox" id="nav-3" >
     <label class="md-nav__link" for="nav-3">
-      Framework
+      Deploy
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="Framework" data-md-level="1">
+    <nav class="md-nav" aria-label="Deploy" data-md-level="1">
       <label class="md-nav__title" for="nav-3">
         <span class="md-nav__icon md-icon"></span>
-        Framework
+        Deploy
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -262,8 +262,8 @@
 
 
   <li class="md-nav__item">
-    <a href="../../framework/schedular/" class="md-nav__link">
-      schedular
+    <a href="../../deploy/cli/" class="md-nav__link">
+      cli
     </a>
   </li>
 
@@ -306,13 +306,13 @@
     
     <input class="md-nav__toggle md-toggle" data-md-toggle="nav-4-1" type="checkbox" id="nav-4-1" checked>
     <label class="md-nav__link" for="nav-4-1">
-      code
+      framework
       <span class="md-nav__icon md-icon"></span>
     </label>
-    <nav class="md-nav" aria-label="code" data-md-level="2">
+    <nav class="md-nav" aria-label="framework" data-md-level="2">
       <label class="md-nav__title" for="nav-4-1">
         <span class="md-nav__icon md-icon"></span>
-        code
+        framework
       </label>
       <ul class="md-nav__list" data-md-scrollfix>
         
@@ -476,6 +476,18 @@
   </li>
 
         
+          
+          
+          
+
+
+  <li class="md-nav__item">
+    <a href="../master/" class="md-nav__link">
+      master
+    </a>
+  </li>
+
+        
       </ul>
     </nav>
   </li>
@@ -488,7 +500,7 @@
 
   <li class="md-nav__item">
     <a href="../proto/" class="md-nav__link">
-      protobuf
+      proto buffer
     </a>
   </li>
 
@@ -797,6 +809,9 @@ Enroll<span class="p">(</span><span class="bp">self</span><span class="p">,</spa
         <span class="n">rep</span> <span class="o">=</span> <span class="n">cluster_pb2</span><span class="o">.</span><span class="n">Enroll</span><span class="o">.</span><span class="n">REP</span><span class="p">(</span>
             <span class="n">status</span><span class="o">=</span><span class="n">cluster_pb2</span><span class="o">.</span><span class="n">Enroll</span><span class="o">.</span><span class="n">TASK_READY</span><span class="p">,</span> <span class="n">task</span><span class="o">=</span><span class="n">task</span>
         <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">"response task(</span><span class="si">{</span><span class="n">task</span><span class="o">.</span><span class="n">task_id</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">task</span><span class="o">.</span><span class="n">task_type</span><span class="si">}</span><span class="s2">) to worker </span><span class="si">{</span><span class="n">request</span><span class="o">.</span><span class="n">worker_id</span><span class="si">}</span><span class="s2">"</span>
+        <span class="p">)</span>
         <span class="k">yield</span> <span class="n">rep</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">remove_worker</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">worker_id</span><span class="p">)</span>
@@ -830,7 +845,6 @@ TaskResourceRequire<span class="p">(</span><span class="bp">self</span><span cla
             <span class="n">status</span><span class="o">=</span><span class="n">cluster_pb2</span><span class="o">.</span><span class="n">TaskResourceRequire</span><span class="o">.</span><span class="n">FAILED</span>
         <span class="p">)</span>
 
-    <span class="nb">print</span><span class="p">(</span><span class="n">worker</span><span class="p">,</span> <span class="n">endpoints</span><span class="p">)</span>
     <span class="n">response</span> <span class="o">=</span> <span class="n">cluster_pb2</span><span class="o">.</span><span class="n">TaskResourceRequire</span><span class="o">.</span><span class="n">REP</span><span class="p">(</span>
         <span class="n">status</span><span class="o">=</span><span class="n">cluster_pb2</span><span class="o">.</span><span class="n">TaskResourceRequire</span><span class="o">.</span><span class="n">SUCCESS</span><span class="p">,</span> <span class="n">worker_id</span><span class="o">=</span><span class="n">worker</span><span class="o">.</span><span class="n">worker_id</span>
     <span class="p">)</span>
@@ -1024,7 +1038,13 @@ start<span class="p">(</span><span class="bp">self</span><span class="p">)</span
     <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"starting worker </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_worker_id</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"staring grpc channel to cluster manager"</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">_channel</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">aio</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_manager_address</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_channel</span> <span class="o">=</span> <span class="n">grpc</span><span class="o">.</span><span class="n">aio</span><span class="o">.</span><span class="n">insecure_channel</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_manager_address</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">[</span>
+            <span class="p">(</span><span class="s2">"grpc.max_send_message_length"</span><span class="p">,</span> <span class="mi">512</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
+            <span class="p">(</span><span class="s2">"grpc.max_receive_message_length"</span><span class="p">,</span> <span class="mi">512</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">),</span>
+        <span class="p">],</span>
+    <span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">_stub</span> <span class="o">=</span> <span class="n">cluster_pb2_grpc</span><span class="o">.</span><span class="n">ClusterManagerStub</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_channel</span><span class="p">)</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"sending enroll request to cluster manager"</span><span class="p">)</span>
@@ -1193,7 +1213,7 @@ stop<span class="p">(</span><span class="bp">self</span><span class="p">)</span>
     <div class="md-footer-nav">
       <nav class="md-footer-nav__inner md-grid" aria-label="Footer">
         
-          <a href="../../framework/schedular/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+          <a href="../../deploy/cli/" class="md-footer-nav__link md-footer-nav__link--prev" rel="prev">
             <div class="md-footer-nav__button md-icon">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12z"/></svg>
             </div>
@@ -1202,7 +1222,7 @@ stop<span class="p">(</span><span class="bp">self</span><span class="p">)</span>
                 <span class="md-footer-nav__direction">
                   Previous
                 </span>
-                schedular
+                cli
               </div>
             </div>
           </a>
