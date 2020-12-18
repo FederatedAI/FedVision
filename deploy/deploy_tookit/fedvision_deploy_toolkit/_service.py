@@ -19,8 +19,9 @@ import typer
 import yaml
 from fedvision_deploy_toolkit import __BASE_NAME__
 
-app = typer.Typer(help="[start|stop] service")
+app = typer.Typer(help="services [start|stop] tools")
 all_app = typer.Typer(help="[start|stop] all services")
+
 coordinator_app = typer.Typer(help="[start|stop] coordinator service")
 cluster_manager_app = typer.Typer(help="[start|stop] cluster manager service")
 cluster_worker_app = typer.Typer(help="[start|stop] cluster worker service")
@@ -46,8 +47,9 @@ def start_all(
     # start coordinator
     coordinator_config = config_dict["coordinator"]
     if coordinator_config.get("machine"):
+        typer.echo(f"staring coordinator {coordinator_config['name']}")
         coordinator_machine = machines_map[coordinator_config["machine"]]
-        start_coordinator(
+        status = start_coordinator(
             coordinator_machine["ssh_string"],
             coordinator_machine["base_dir"],
             coordinator_config["port"],
@@ -55,6 +57,7 @@ def start_all(
         coordinator_address = (
             f"{coordinator_machine['ip']}:{coordinator_config['port']}"
         )
+        typer.echo(f"start coordinator {coordinator_config['name']} done, success: {status}\n")
     else:
         coordinator_address = f"{coordinator_config['ip']}:{coordinator_config['port']}"
 
@@ -65,33 +68,40 @@ def start_all(
         typer.echo(f"starting cluster {cluster_name}")
         manager_config = cluster_config["manager"]
         manager_machine = machines_map[manager_config["machine"]]
-        start_cluster_manager(
+        status = start_cluster_manager(
             manager_machine["ssh_string"],
             manager_machine["base_dir"],
             manager_config["port"],
         )
+        typer.echo(f"start cluster {cluster_name} done, success: {status}\n")
+
         cluster_address = f"{manager_machine['ip']}:{manager_config['port']}"
         cluster_address_map[cluster_name] = cluster_address
+        if status:
+            typer.echo(f"starting cluster workers for cluster {cluster_name}")
 
-        for worker_config in cluster_config.get("workers", []):
-            typer.echo(f"starting worker {worker_config['name']}")
-            worker_machine = machines_map[worker_config["machine"]]
-            start_cluster_worker(
-                machine_ssh=worker_machine["ssh_string"],
-                machine_base_dir=worker_machine["base_dir"],
-                name=worker_config["name"],
-                local_ip=worker_machine["ip"],
-                port_start=int(worker_config["ports"].split("-")[0]),
-                port_end=int(worker_config["ports"].split("-")[1]),
-                max_tasks=worker_config["max_tasks"],
-                cluster_manager_address=cluster_address,
-            )
+            for worker_config in cluster_config.get("workers", []):
+                typer.echo(f"starting worker {worker_config['name']}")
+                worker_machine = machines_map[worker_config["machine"]]
+                status = start_cluster_worker(
+                    machine_ssh=worker_machine["ssh_string"],
+                    machine_base_dir=worker_machine["base_dir"],
+                    name=worker_config["name"],
+                    local_ip=worker_machine["ip"],
+                    port_start=int(worker_config["ports"].split("-")[0]),
+                    port_end=int(worker_config["ports"].split("-")[1]),
+                    max_tasks=worker_config["max_tasks"],
+                    cluster_manager_address=cluster_address,
+                )
+                typer.echo(
+                    f"start worker {worker_config['name']} done, success: {status}\n"
+                )
 
     # start master
     for master_config in config_dict.get("masters", []):
         typer.echo(f"starting master {master_config['name']}")
         master_machine = machines_map[master_config["machine"]]
-        start_master(
+        status = start_master(
             machine_ssh=master_machine["ssh_string"],
             machine_base_dir=master_machine["base_dir"],
             submit_port=master_config["submit_port"],
@@ -99,6 +109,9 @@ def start_all(
             cluster_manager_address=cluster_address_map[master_config["cluster"]],
             coordinator_address=coordinator_address,
         )
+        typer.echo(f"start master {master_config['name']} done, success: {status}\n")
+
+    typer.echo()
 
 
 @all_app.command(name="stop", help="stop all services")
@@ -172,10 +185,12 @@ def start_coordinator(
                 warn=True,
             ).failed:
                 typer.echo(f"failed: can't start coordinator")
+                return False
             else:
                 typer.echo(
                     f"{machine_ssh}:{machine_base_dir} started coordinator: port={coordinator_port}"
                 )
+                return True
 
 
 @coordinator_app.command(name="stop", help="stop coordinator")
@@ -216,10 +231,12 @@ def start_cluster_manager(
                 warn=True,
             ).failed:
                 typer.echo(f"failed: can't start cluster manager")
+                return False
             else:
                 typer.echo(
                     f"{machine_ssh}:{machine_base_dir} started cluster manager: port={manager_port}"
                 )
+                return True
 
 
 @cluster_manager_app.command(name="stop", help="stop cluster manager")
@@ -264,10 +281,12 @@ def start_cluster_worker(
                 warn=True,
             ).failed:
                 typer.echo(f"failed: can't start cluster worker named {name}")
+                return False
             else:
                 typer.echo(
                     f"{machine_ssh}:{machine_base_dir} started cluster worker: name={name}"
                 )
+                return True
 
 
 @cluster_worker_app.command(name="stop", help="stop cluster worker")
@@ -308,10 +327,12 @@ def start_master(
                 warn=True,
             ).failed:
                 typer.echo(f"failed: can't start master at port {submit_port}")
+                return False
             else:
                 typer.echo(
                     f"{machine_ssh}:{machine_base_dir} started master: port={submit_port}"
                 )
+                return True
 
 
 @master_app.command(name="stop", help="stop master")

@@ -17,7 +17,5 @@ from pathlib import Path
 
 __base_dir__ = Path(__file__).parent
 __fedvision_tarball__ = __base_dir__.joinpath("data", "fedvision.tar.gz").absolute()
-__template__ = __base_dir__.joinpath(
-    "template", "deploy_config_template.yaml"
-).absolute()
-__BASE_NAME__ = "Fedvision"
+__template__ = __base_dir__.joinpath("template").absolute()
+__BASE_NAME__ = "FedVision"

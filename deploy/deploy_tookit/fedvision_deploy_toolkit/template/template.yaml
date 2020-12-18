@@ -1,13 +1,13 @@
 machines:
   - name: machine1
     ip: 127.0.0.1
-    ssh_string: sage@127.0.0.1:22
+    ssh_string: 127.0.0.1:22 # [user@]ip:port
     base_dir: /data/projects/fedvision1
     python_for_venv_create: python3 # use to create venv
 
   - name: machine2
     ip: 127.0.0.1
-    ssh_string: sage@127.0.0.1:22
+    ssh_string: 127.0.0.1:22
     base_dir: /data/projects/fedvision2
     python_for_venv_create: python3
 

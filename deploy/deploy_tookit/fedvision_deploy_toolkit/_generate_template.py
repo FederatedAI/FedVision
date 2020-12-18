@@ -17,10 +17,15 @@ import shutil
 import typer
 from fedvision_deploy_toolkit import __template__
 
-app = typer.Typer()
+app = typer.Typer(help="template tools")
 
 
 @app.command()
 def generate():
     shutil.copy(__template__, os.getcwd())
     typer.echo(f"template {os.path.basename(__template__)} generated")
+
+
+@app.command(name="standalone")
+def standalone_template():
+    shutil.copy(os.path.join(__template__, "standalone_template.yaml"), os.getcwd())

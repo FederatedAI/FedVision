@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+import urllib.parse
 from pathlib import Path
 
 import click
@@ -28,11 +30,11 @@ def cli():
     ...
 
 
-def post(path, json_data):
+def post(endpoint, path, json_data):
     async def post_co():
         async with aiohttp.ClientSession() as session:
             async with session.post(
-                f"http://127.0.0.1:10002/{path}", json=json_data
+                url=urllib.parse.urljoin(f"http://{endpoint}", path), json=json_data
             ) as resp:
                 if not resp.ok:
                     print(resp.status)
@@ -50,7 +52,12 @@ def post(path, json_data):
     type=click.Path(exists=True, file_okay=True, dir_okay=False),
     required=True,
 )
-def submit(config):
+@click.option(
+    "--endpoint",
+    type=str,
+    required=True,
+)
+def submit(endpoint, config):
 
     base = Path(config)
     with base.open("r") as f:
@@ -65,6 +72,7 @@ def submit(config):
 
     extensions.get_job_schema_validator(job_type).validate(job_config)
     post(
+        endpoint,
         "submit",
         dict(
             job_type=job_type,

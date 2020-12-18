@@ -19,7 +19,7 @@ import typer
 import yaml
 from fedvision_deploy_toolkit import __fedvision_tarball__, __BASE_NAME__
 
-app = typer.Typer()
+app = typer.Typer(help="deploy tools")
 
 
 @app.command()
@@ -36,10 +36,15 @@ def deploy(
     with config.open() as f:
         config_dict = yaml.safe_load(f)
     machines = config_dict.get("machines", [])
-    for machine in machines:
-        _maybe_create_python_venv(machine)
-        _upload_code(machine)
-        _install_deps(machine)
+    typer.echo(
+        f"deploying {len(machines)} machines: {[machine['name'] for machine in machines]}"
+    )
+    with typer.progressbar(machines, length=len(machines)) as bar:
+        for machine in bar:
+            _maybe_create_python_venv(machine)
+            _upload_code(machine)
+            _install_deps(machine)
+    typer.echo(f"deploy done")
 
 
 def _upload_code(machine):

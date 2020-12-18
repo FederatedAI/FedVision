@@ -1,3 +1,4 @@
 ## framework
 
-![framework](../img/FedVision.png)
+![framework](../img/fedvision.png)
+

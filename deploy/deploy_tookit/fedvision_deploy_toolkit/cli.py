@@ -17,7 +17,7 @@ from fedvision_deploy_toolkit import _deploy, _service, _generate_template
 app = typer.Typer()
 
 app.add_typer(_deploy.app, name="deploy")
-app.add_typer(_service.app, name="service")
+app.add_typer(_service.app, name="services")
 app.add_typer(_generate_template.app, name="template")
 
 if __name__ == "__main__":

@@ -1,8 +1,8 @@
 site_name: FedVision
 repo_name: FederatedAI/FedVision
 repo_url: https://github.com/FederatedAI/FedVision
-edit_uri: "https://github.com/FederatedAI/FedVision"
-site_url: "http://"
+edit_uri: https://github.com/FederatedAI/FedVision/tree/main/docs
+site_url: http://github.com/FederatedAI/FedVision
 
 copyright: © Copyright 2020 WeBank Co., Ltd. | All Rights Reserved.
 
@@ -10,12 +10,6 @@ theme:
   name: material
   features:
     tabs: true
-  logo: img/favicon.ico
-  favicon: img/favicon.ico
-  palette:
-    scheme: slate
-    primary: teal
-    accent: purple
 
 plugins:
   - search
@@ -57,23 +51,29 @@ markdown_extensions:
   - pymdownx.tabbed
   - pymdownx.tilde
 
+extra_css:
+  - 'css/termynal.css'
+  - 'css/custom.css'
+
 extra_javascript:
+#  - 'https://unpkg.com/mermaid@8.4.6/dist/mermaid.min.js'
+  - 'js/termynal.js'
+  - 'js/custom.js'
   - 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'
 
-extra_css:
-    - css/custom.css
-
 nav:
-  - Home: index.md
-  - Framework:
-      - overview: framework/overview.md
+  - Welcome to Fedvision: index.md
+  - Quickstart: quickstart/quickstart.md
+  - Overview:
+      - framework: framework/overview.md
   - Deploy:
-      - cli: deploy/cli.md
+      - fedvision-deploy-toolkit-cli: deploy/cli.md
+  - Develop: develop/develop.md
   - API:
       - framework:
-        - cluster: apis/cluster.md
-        - coordinator: apis/coordinator.md
-        - master: apis/master.md
+          - cluster: apis/cluster.md
+          - coordinator: apis/coordinator.md
+          - master: apis/master.md
       - proto buffer: apis/proto.md
   - Releases:
       - Changelog: release/change_log.md
