@@ -23,7 +23,7 @@ parent_path = osp.abspath(
 if parent_path not in sys.path:
     sys.path.append(parent_path)
 
-from ppdet.utils.download import download_dataset
+from ppdet.utils.download import download_dataset  # noqa: E402
 
 logging.basicConfig(level=logging.INFO)
 

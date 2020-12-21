@@ -13,3 +13,5 @@
 # limitations under the License.
 
 from fedvision.paddle_fl.tasks.utils._trainer import FedAvgTrainer
+
+__all__ = ["FedAvgTrainer"]

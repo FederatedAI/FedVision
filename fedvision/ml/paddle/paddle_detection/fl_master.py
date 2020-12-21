@@ -85,7 +85,7 @@ def fl_master(algorithm_config, ps_endpoint, config):
     logging.basicConfig(
         level=logging.DEBUG, format="%(asctime)s-%(levelname)s: %(message)s"
     )
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger(__name__)  # noqa: F841
     with open(config) as f:
         config_json = json.load(f)
     worker_num = config_json["worker_num"]

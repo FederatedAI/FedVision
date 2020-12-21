@@ -1,8 +1,8 @@
 # FedVision
 
 [![Build Status](https://travis-ci.com/weiwee/FedVision.svg?token=M1cDYtJimwVq7j3Qq2c1&branch=master)](https://travis-ci.com/weiwee/FedVision)
-[![Documentation Read the Docs Status](https://img.shields.io/readthedocs/fedvision?label=Read%20the%20Docs)](https://fedvision.readthedocs.io/en/latest/?badge=latest)
-[![Documentation Github Page](https://img.shields.io/badge/GitHub%20Pages-gray?logo=github)](http://federatedai.github.io/FedVision)
+[![Documentation Read the Docs](https://img.shields.io/readthedocs/fedvision?label=Read%20the%20Docs)](https://fedvision.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Github Page](https://github.com/FederatedAI/FedVision/workflows/GitHub%20Pages/badge.svg)](http://federatedai.github.io/FedVision)
 [![Support Python Versions](https://img.shields.io/pypi/pyversions/fedvision)](https://img.shields.io/pypi/pyversions/fedvision)
 
 
