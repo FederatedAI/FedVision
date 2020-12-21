@@ -1,4 +1,4 @@
-name: build and deploy mkdocs to github pages
+name: mkdocs-github-pages
 on:
   push:
     branches:
