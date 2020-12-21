@@ -1,0 +1,31 @@
+name: build and deploy mkdocs to github pages
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: "recursive"
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+          architecture: 'x64'
+      - name: Install dependencies
+        run: |
+          python3 -m pip install --upgrade pip     # install pip
+          python3 -m pip install -r docs/requirements.txt # install doc dependency
+          python3 -m pip install -r requirements.txt # install dependency
+          export PYTHONPATH=$PYTHONPATH:
+      - name: Build site
+        run: mkdocs build
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site

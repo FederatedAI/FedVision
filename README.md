@@ -1,8 +1,10 @@
 # FedVision
 
 [![Build Status](https://travis-ci.com/weiwee/FedVision.svg?token=M1cDYtJimwVq7j3Qq2c1&branch=master)](https://travis-ci.com/weiwee/FedVision)
-[![codecov](https://codecov.io/gh/weiwee/FedVision/branch/master/graph/badge.svg?token=53P5W56MIJ)](https://codecov.io/gh/weiwee/FedVision)
-[![Documentation Status](https://readthedocs.com/projects/sagewei-fedvision/badge/?version=latest&token=b5f872239fae7a1fb71abee19971fa6916d14cc10af496affd92446f64a7f75f)](https://sagewei-fedvision.readthedocs-hosted.com/en/latest/?badge=latest)
+[![Documentation Read the Docs Status](https://img.shields.io/readthedocs/fedvision?label=Read%20the%20Docs)](https://fedvision.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Github Page](https://img.shields.io/badge/GitHub%20Pages-gray?logo=github)](http://federatedai.github.io/FedVision)
+[![Support Python Versions](https://img.shields.io/pypi/pyversions/fedvision)](https://img.shields.io/pypi/pyversions/fedvision)
+
 
 FedVision is a Visual Object Detection Platform Powered by Federated Learning
 
@@ -46,7 +48,7 @@ Too run FedVision, following dependency or tools required:
 4. run deploy cmd
     
     ```bash
-    fedvision-deploy services all start standalone_template.yaml
+    fedvision-deploy deploy deploy standalone_template.yaml
     ```
 
 ### Services start and stop 

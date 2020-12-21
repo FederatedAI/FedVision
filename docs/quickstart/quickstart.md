@@ -108,7 +108,7 @@ $ cd /data/projects/fedvision
 $ source venv/bin/activate
 $ export PYTHONPATH=$PYTHONPATH:/data/projects/fedvision/FedVision
 
-// submit jobs to master 1
+// submit jobs to master1
 $ sh FedVision/examples/paddle_mnist/run.sh 127.0.0.1:10002
 {
   "job_id": "master1-20201218202835-1"
