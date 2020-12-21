@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
-     <loc>http://</loc>
-     <lastmod>2020-12-18</lastmod>
+     <loc>http://github.com/FederatedAI/FedVision/</loc>
+     <lastmod>2020-12-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>http:///framework/overview/</loc>
-     <lastmod>2020-12-18</lastmod>
+     <loc>http://github.com/FederatedAI/FedVision/quickstart/quickstart/</loc>
+     <lastmod>2020-12-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>http:///deploy/cli/</loc>
-     <lastmod>2020-12-18</lastmod>
+     <loc>http://github.com/FederatedAI/FedVision/framework/overview/</loc>
+     <lastmod>2020-12-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>http:///apis/cluster/</loc>
-     <lastmod>2020-12-18</lastmod>
+     <loc>http://github.com/FederatedAI/FedVision/deploy/cli/</loc>
+     <lastmod>2020-12-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>http:///apis/coordinator/</loc>
-     <lastmod>2020-12-18</lastmod>
+     <loc>http://github.com/FederatedAI/FedVision/apis/cluster/</loc>
+     <lastmod>2020-12-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>http:///apis/master/</loc>
-     <lastmod>2020-12-18</lastmod>
+     <loc>http://github.com/FederatedAI/FedVision/apis/coordinator/</loc>
+     <lastmod>2020-12-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>http:///apis/proto/</loc>
-     <lastmod>2020-12-18</lastmod>
+     <loc>http://github.com/FederatedAI/FedVision/apis/master/</loc>
+     <lastmod>2020-12-21</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>http:///release/change_log/</loc>
-     <lastmod>2020-12-18</lastmod>
+     <loc>http://github.com/FederatedAI/FedVision/release/change_log/</loc>
+     <lastmod>2020-12-21</lastmod>
      <changefreq>daily</changefreq>
     </url>
 </urlset>
