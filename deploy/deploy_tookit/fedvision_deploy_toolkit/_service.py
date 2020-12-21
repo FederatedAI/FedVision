@@ -57,7 +57,9 @@ def start_all(
         coordinator_address = (
             f"{coordinator_machine['ip']}:{coordinator_config['port']}"
         )
-        typer.echo(f"start coordinator {coordinator_config['name']} done, success: {status}\n")
+        typer.echo(
+            f"start coordinator {coordinator_config['name']} done, success: {status}\n"
+        )
     else:
         coordinator_address = f"{coordinator_config['ip']}:{coordinator_config['port']}"
 

@@ -1,0 +1,30 @@
+name: Lint
+
+on: push
+
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+
+      - name: Install Python dependencies
+        run: pip install black flake8
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Enable linters
+          black: true
+          black_args: "--exclude deps/"
+          flake8: true
+          flake8_args: "--exclude deps/"
