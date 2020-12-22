@@ -20,7 +20,6 @@ _project_base = __base_dir__.parent.parent.parent
 
 
 def _build():
-    # generate protobuf
     __fedvision_tarball__.parent.mkdir(exist_ok=True, parents=True)
     with tarfile.open(__fedvision_tarball__, "w:gz") as tar:
         for path in [
