@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url>
-     <loc>http://github.com/FederatedAI/FedVision/</loc>
+     <loc>http://github.com/FederatedAI/FedVision/welcome/</loc>
      <lastmod>2020-12-22</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
@@ -12,7 +12,19 @@
      <lastmod>2020-12-22</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
+     <loc>http://github.com/FederatedAI/FedVision/framework/paddledetection/</loc>
+     <lastmod>2020-12-22</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>http://github.com/FederatedAI/FedVision/framework/paddlefl/</loc>
+     <lastmod>2020-12-22</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
      <loc>http://github.com/FederatedAI/FedVision/deploy/cli/</loc>
+     <lastmod>2020-12-22</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>http://github.com/FederatedAI/FedVision/develop/codestyle/</loc>
      <lastmod>2020-12-22</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
