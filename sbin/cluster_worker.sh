@@ -22,7 +22,7 @@ PROJECT_BASE=$(dirname "${DIR}")
 # shellcheck source=service.sh
 . "${PROJECT_BASE}/sbin/service.sh"
 
-usage="Usage: cluster_worker.sh (start|stop) <unique worker name> [<local ip> <port for serve start> <port for serve end> <max tasks> <cluster manager address>]"
+usage="Usage: cluster_worker.sh (start|stop) <unique worker name> [<local ip> <port for serve start> <port for serve end> <max tasks> <cluster manager address> <data base dir>]"
 if [ $# -le 1 ]; then
   echo "$usage"
   exit 1
@@ -39,8 +39,8 @@ start_cluster_worker() {
     ps aux | grep "fedvision.framework.cli.cluster_worker" | grep "name ${1}" | grep -v grep | awk '{print $2}'
   )
   if [[ -z ${pid} ]]; then
-     mkdir -p "$PROJECT_BASE/logs/nohup"
-    nohup "${FEDVISION_PYTHON_EXECUTABLE}" -m fedvision.framework.cli.cluster_worker --name "$1" --worker-ip "$2" --port-start "$3" --port-end "$4" --max-tasks "$5" --manager-address "$6" >>"${PROJECT_BASE}/logs/nohup/worker" 2>&1 &
+    mkdir -p "$PROJECT_BASE/logs/nohup"
+    nohup "${FEDVISION_PYTHON_EXECUTABLE}" -m fedvision.framework.cli.cluster_worker --name "$1" --worker-ip "$2" --port-start "$3" --port-end "$4" --max-tasks "$5" --manager-address "$6" --data-base-dir "$7" >>"${PROJECT_BASE}/logs/nohup/worker" 2>&1 &
     for ((i = 1; i <= 20; i++)); do
       sleep 0.1
       pid=$(
@@ -92,7 +92,7 @@ stop_cluster_worker() {
 
 case "$1" in
 start)
-  start_cluster_worker "$2" "$3" "$4" "$5" "$6" "$7"
+  start_cluster_worker "$2" "$3" "$4" "$5" "$6" "$7" "$8"
   exit 0
   ;;
 stop)

@@ -114,6 +114,7 @@ class CoordinatorConnect(Logger):
                     self.debug(
                         f"proposal {response.proposal_id} not ready: {fetch_response.status}"
                     )
+                    return
 
                 # put task in cluster task queue
                 await self.shared_status.cluster_task_queue.put(fetch_response.task)

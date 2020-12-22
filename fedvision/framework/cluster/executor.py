@@ -13,22 +13,28 @@
 # limitations under the License.
 
 import asyncio
+import os
 from pathlib import Path
 from typing import Optional
 
 from fedvision.framework.abc.executor import Executor
 from fedvision.framework.utils.logger import Logger
+from fedvision import FEDVISION_DATA_BASE_ENV
 
 
 class ProcessExecutor(Executor, Logger):
-    def __init__(self, work_dir: Path):
+    def __init__(self, work_dir: Path, data_dir=None):
         super().__init__(work_dir)
+        self._data_dir = data_dir
 
     async def execute(self, cmd) -> Optional[int]:
         self.info(f"execute cmd {cmd} at {self.working_dir}")
         try:
+            env = os.environ.copy()
+            if self._data_dir is not None:
+                env[FEDVISION_DATA_BASE_ENV] = self._data_dir
             sub = await asyncio.subprocess.create_subprocess_shell(
-                cmd, shell=True, cwd=self.working_dir
+                cmd, shell=True, cwd=self.working_dir, env=env
             )
             await sub.communicate()
             return sub.returncode

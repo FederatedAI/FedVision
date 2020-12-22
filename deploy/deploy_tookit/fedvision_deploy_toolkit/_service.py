@@ -273,13 +273,16 @@ def start_cluster_worker(
     port_end: int = typer.Argument(..., help="port start"),
     max_tasks: int = typer.Argument(..., help="num of maximum parallel tasks"),
     cluster_manager_address=typer.Argument(..., help="cluster manager address"),
+    data_base_dir: str = typer.Option(None, "--data-dir", help="data dir"),
 ):
+    if data_base_dir is None or isinstance(data_base_dir, typer.params.OptionInfo):
+        data_base_dir = os.path.join(machine_base_dir, __BASE_NAME__, "data")
     with fabric.Connection(machine_ssh) as c:
         with c.cd(machine_base_dir):
             if c.run(
                 f"FEDVISION_PYTHON_EXECUTABLE={os.path.join(machine_base_dir, 'venv/bin/python')} "
                 f"{__BASE_NAME__}/sbin/cluster_worker.sh start "
-                f"{name} {local_ip} {port_start} {port_end} {max_tasks} {cluster_manager_address}",
+                f"{name} {local_ip} {port_start} {port_end} {max_tasks} {cluster_manager_address} {data_base_dir}",
                 warn=True,
             ).failed:
                 typer.echo(f"failed: can't start cluster worker named {name}")

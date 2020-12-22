@@ -18,3 +18,14 @@ __version__ = "0.1"
 __basedir__ = os.path.dirname(os.path.abspath(__file__))
 __logs_dir__ = os.path.abspath(os.path.join(__basedir__, os.path.pardir, "logs"))
 __data_dir__ = os.path.abspath(os.path.join(__basedir__, os.path.pardir, "data"))
+
+FEDVISION_DATA_BASE_ENV = "FEDVISION_DATA_BASE"
+
+
+def get_data_dir():
+    if FEDVISION_DATA_BASE_ENV in os.environ and os.path.exists(
+        os.environ.get(FEDVISION_DATA_BASE_ENV)
+    ):
+        return os.path.abspath(os.environ.get(FEDVISION_DATA_BASE_ENV))
+    else:
+        return __data_dir__
