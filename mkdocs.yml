@@ -24,6 +24,7 @@ plugins:
   - mkdocs-jupyter
 
 markdown_extensions:
+  - pymdownx.snippets
   - mdx_math
   - codehilite
   - admonition
@@ -62,13 +63,16 @@ extra_javascript:
   - 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML'
 
 nav:
-  - Welcome to Fedvision: index.md
+  - Welcome to Fedvision: welcome.md
   - Quickstart: quickstart/quickstart.md
   - Overview:
       - framework: framework/overview.md
+      - paddledetection: framework/paddledetection.md
+      - paddlefl: framework/paddlefl.md
   - Deploy:
       - fedvision-deploy-toolkit-cli: deploy/cli.md
-  - Develop: develop/develop.md
+  - Develop:
+      - codestyle: develop/codestyle.md
   - API:
       - framework:
           - cluster: apis/cluster.md

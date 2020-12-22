@@ -28,6 +28,12 @@ class ClusterManager(Logger, cluster_pb2_grpc.ClusterManagerServicer):
         port: int,
         host: str = None,
     ):
+        """
+        init cluster manager instance
+        Args:
+            port:
+            host:
+        """
         self._host = "[::]" if host is None else host
         self._port = port
         self._alive_workers: MutableMapping[str, _WorkerDescription] = {}
@@ -36,10 +42,30 @@ class ClusterManager(Logger, cluster_pb2_grpc.ClusterManagerServicer):
 
         self._server: Optional[grpc.aio.Server] = None
 
-    def has_worker(self, worker_id):
+    def has_worker(self, worker_id) -> bool:
+        """
+        check worker `worker_id` alive(enrolled)
+        Args:
+            worker_id:
+
+        Returns:
+
+        """
         return worker_id in self._alive_workers
 
     def add_worker(self, worker_id, worker_ip, max_tasks, port_start, port_end):
+        """
+        add worker to manager
+        Args:
+            worker_id:
+            worker_ip:
+            max_tasks:
+            port_start:
+            port_end:
+
+        Returns:
+
+        """
         worker = _WorkerDescription(
             worker_id=worker_id,
             worker_ip=worker_ip,
@@ -68,6 +94,11 @@ class ClusterManager(Logger, cluster_pb2_grpc.ClusterManagerServicer):
         return worker
 
     def remove_worker(self, worker_id):
+        """
+        remove worker from manager
+        Args:
+            worker_id:
+        """
         if worker_id not in self._alive_workers:
             return
         del self._alive_workers[worker_id]
@@ -150,6 +181,15 @@ class ClusterManager(Logger, cluster_pb2_grpc.ClusterManagerServicer):
     async def TaskSubmit(
         self, request: cluster_pb2.TaskSubmit.REQ, context: grpc.aio.ServicerContext
     ) -> cluster_pb2.TaskSubmit.REP:
+        """
+        process task submit request
+        Args:
+            request:
+            context:
+
+        Returns:
+
+        """
         try:
             task = request.task
             if not task.assignee:
@@ -163,6 +203,15 @@ class ClusterManager(Logger, cluster_pb2_grpc.ClusterManagerServicer):
             return cluster_pb2.TaskSubmit.REP(status=cluster_pb2.TaskSubmit.FAILED)
 
     async def TaskResourceRequire(self, request, context):
+        """
+        process task resource acquired request
+        Args:
+            request:
+            context:
+
+        Returns:
+
+        """
         worker, endpoints = await self.dispatch(
             resource={"endpoints": request.num_endpoints}
         )
@@ -179,6 +228,11 @@ class ClusterManager(Logger, cluster_pb2_grpc.ClusterManagerServicer):
         return response
 
     async def start(self):
+        """
+        start cluster manager service
+        Returns:
+
+        """
         self.info(f"starting cluster manager at port: {self._port}")
         self._server = grpc.aio.server(
             options=[
@@ -192,11 +246,22 @@ class ClusterManager(Logger, cluster_pb2_grpc.ClusterManagerServicer):
         self.info(f"cluster manager started at port: {self._port}")
 
     async def stop(self):
+        """
+        stop cluster manager service
+        """
         await self._server.stop(1)
 
     async def dispatch(
         self, resource: dict = None
     ) -> Tuple[Optional["_WorkerDescription"], list]:
+        """
+        dispatch tasks to worker
+        Args:
+            resource:
+
+        Returns:
+
+        """
         if resource is None:
             resource = {}
         if not resource:

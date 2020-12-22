@@ -84,7 +84,17 @@ class ProposalAcceptRule(Logger):
 
 
 class CoordinatorConnect(Logger):
+    """
+    client connects to coordinator
+    """
+
     def __init__(self, address: str, shared_status: _SharedStatus):
+        """
+        init coordinator client
+        Args:
+            address: str
+            shared_status:
+        """
         self.address = address
         self.shared_status = shared_status
         self.accept_rule = ProposalAcceptRule(self.shared_status)
@@ -93,6 +103,9 @@ class CoordinatorConnect(Logger):
         self._stub = None
 
     async def subscribe(self):
+        """
+        start subscribe to coordinator and accept `proposals`
+        """
         request = coordinator_pb2.Subscribe.REQ(party_id=self.shared_status.party_id)
         for job_type in self.shared_status.job_types:
             request.job_types.append(job_type)
@@ -124,14 +137,30 @@ class CoordinatorConnect(Logger):
     async def make_proposal(
         self, request: coordinator_pb2.Proposal.REQ
     ) -> coordinator_pb2.Proposal.REP:
+        """
+        publish a job proposal to coordinator
+        Args:
+            request:
+                request
+
+        Returns:
+             response
+
+        """
         return await self._stub.Proposal(request)
 
     async def leave(self):
+        """
+        disconnect with coordinator
+        """
         return await self._stub.Leave(
             coordinator_pb2.Leave.REQ(party_id=self.shared_status.party_id)
         )
 
     async def start_coordinator_channel(self):
+        """
+        start channel to coordinator
+        """
         self.info(f"start coordinator channel to {self.address}")
         self._channel = grpc.aio.insecure_channel(
             self.address,
@@ -146,16 +175,36 @@ class CoordinatorConnect(Logger):
         self.info(f"coordinator channel started to {self.address}")
 
     async def coordinator_channel_ready(self):
+        """
+        wait until channel ready
+        """
         return await self._channel.channel_ready()
 
     async def stop_coordinator_channel(self, grace: Optional[float] = None):
+        """
+        stop channel
+        Args:
+            grace:
+                wait seconds to gracefully stop
+        """
         self.info(f"stopping coordinator channel")
         await self._channel.close(grace)
         self.info(f"coordinator channel started to {self.address}")
 
 
 class RESTService(Logger):
+    """
+    service accept restful request from users
+    """
+
     def __init__(self, shared_status: _SharedStatus, port: int, host: str = None):
+        """
+        init rest services instance
+        Args:
+            shared_status:
+            port:
+            host:
+        """
         self.shared_status = shared_status
         self.port = port
         self.host = host
@@ -165,7 +214,6 @@ class RESTService(Logger):
     async def start_rest_site(self):
         """
         start web service non-blocked
-
         """
         self.info(
             f"starting restful services at {':' if self.host is None else self.host}:{self.port}"
@@ -285,13 +333,26 @@ class RESTService(Logger):
 
 
 class ClusterManagerConnect(Logger):
+    """
+    cluster manager client
+    """
+
     def __init__(self, address, shared_status: _SharedStatus):
+        """
+        init cluster manager client
+        Args:
+            address:
+            shared_status:
+        """
         self.address = address
         self.shared_status = shared_status
         self._channel: Optional[grpc.aio.Channel] = None
         self._stub: Optional[cluster_pb2_grpc.ClusterManagerStub] = None
 
     async def submit_tasks_to_cluster(self):
+        """
+        infinity loop to get task from queue and submit it to cluster
+        """
         while True:
             task = await self.shared_status.cluster_task_queue.get()
             self.debug(
@@ -305,10 +366,21 @@ class ClusterManagerConnect(Logger):
     async def task_resource_require(
         self, request: cluster_pb2.TaskResourceRequire.REQ
     ) -> cluster_pb2.TaskResourceRequire.REP:
+        """
+        acquired resource from cluster(ports)
+        Args:
+            request:
+
+        Returns:
+
+        """
         response = await self._stub.TaskResourceRequire(request)
         return response
 
     async def start_cluster_channel(self):
+        """
+        start channel to cluster manager
+        """
         self.info(f"start cluster channel to {self.address}")
         self._channel = grpc.aio.insecure_channel(
             self.address,
@@ -321,9 +393,20 @@ class ClusterManagerConnect(Logger):
         self.info(f"cluster channel started to {self.address}")
 
     async def cluster_channel_ready(self):
+        """
+        await until channel ready
+        """
         return await self._channel.channel_ready()
 
     async def stop_cluster_channel(self, grace: Optional[float] = None):
+        """
+        stop channel to cluster manager
+        Args:
+            grace:
+
+        Returns:
+
+        """
         self.info(f"stopping cluster channel")
         await self._channel.close(grace)
         self.info(f"cluster channel started to {self.address}")
