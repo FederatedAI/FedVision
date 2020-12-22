@@ -1,6 +1,5 @@
 # FedVision
 
-[![Build Status](https://travis-ci.com/weiwee/FedVision.svg?token=M1cDYtJimwVq7j3Qq2c1&branch=master)](https://travis-ci.com/weiwee/FedVision)
 [![Documentation Read the Docs](https://img.shields.io/readthedocs/fedvision?label=Read%20the%20Docs)](https://fedvision.readthedocs.io/en/latest/?badge=latest)
 [![Documentation Github Page](https://github.com/FederatedAI/FedVision/workflows/GitHub%20Pages/badge.svg)](http://federatedai.github.io/FedVision)
 [![Support Python Versions](https://img.shields.io/pypi/pyversions/fedvision)](https://img.shields.io/pypi/pyversions/fedvision)
@@ -91,8 +90,11 @@ mkdocs serve
 
 Open up http://127.0.0.1:8000/ in your browser.
 
-The latest version of online documentation can be found at [![Documentation Read the Docs](https://img.shields.io/readthedocs/fedvision?label=Read%20the%20Docs)](https://fedvision.readthedocs.io/en/latest/?badge=latest) or
-[![Documentation Github Page](https://github.com/FederatedAI/FedVision/workflows/GitHub%20Pages/badge.svg)](http://federatedai.github.io/FedVision)
+The latest version of online documentation can be found at
+
+- [![Documentation Read the Docs](https://img.shields.io/readthedocs/fedvision?label=Read%20the%20Docs)](https://fedvision.readthedocs.io/en/latest/?badge=latest)
+
+- [![Documentation Github Page](https://github.com/FederatedAI/FedVision/workflows/GitHub%20Pages/badge.svg)](http://federatedai.github.io/FedVision)
 
 ## License
 

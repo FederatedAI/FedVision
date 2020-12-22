@@ -73,8 +73,6 @@ class ClusterWorker(Logger):
         2. start heartbeat loop
         3. start task exec loop
         4. process tasks
-        Returns:
-
         """
         self.info(f"starting worker {self._worker_id}")
 

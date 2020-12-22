@@ -1,5 +1,5 @@
 
-### overview
+### Overview
 
 ![framework](../img/fedvision.png)
 
@@ -21,4 +21,36 @@ as a participants in this job.
 `Party` is an independent role that publishes or subscribe jobs. usually,
 It has a `Cluster` to process assigned tasks, and a `submit service` to process work requests from `Users`,
 a `coordinator clients publish jobs to `Coordinator` or subscribe jobs from "Coordinator" and, a `master` to mixes them up.
+
+### Job's Life Cycle
+
+![job](../img/job.png)
+
+The FedVision framework is an extensible framework. 
+When the master receives the job submit request, 
+it will use different job loader according to the `job_type` parameter.
+This makes it possible to extent `FedVision` framework with various machine learning frameworks.
+
+Currently, only `PaddlePaddle` supported with extension configuration file:
+
+```yaml
+PaddleFL:
+  jobs:
+    - name: paddle_fl
+      schema: ../schema/paddle_fl.json
+      loader: fedvision.paddle_fl.job:PaddleFLJob
+  tasks:
+    - name: fl_trainer
+      loader: fedvision.paddle_fl.tasks.task.trainer:FLTrainer
+    - name: fl_aggregator
+      loader: fedvision.paddle_fl.tasks.task.aggregator:FLAggregator
+```
+
+To implement an new extension, one need to
+
+1. add configuration to [extensions.yaml](https://github.com/FederatedAI/FedVision/blob/main/conf/extensions.yaml)
+
+2. implement [abstract job class](https://github.com/FederatedAI/FedVision/blob/main/fedvision/framework/abc/job.py)
+
+3. implement several [abstract task class](https://github.com/FederatedAI/FedVision/blob/main/fedvision/framework/abc/task.py) used by job. 
 

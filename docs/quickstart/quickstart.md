@@ -1,3 +1,5 @@
+This section describes how to quick deploy and run examples in standalone version of `FedVision`
+
 ### Prerequisites
 
 Too run Fedvision, following dependency or tools required:
@@ -45,6 +47,13 @@ deploy done
 ```
 
 </div>
+
+!!! note
+    Deploying Cluster version is almost same except that you should generate template using
+    ```bash
+    fedvision-deploy template template
+    ```
+    and modify generated template file according to comments.
 
 ### Services start 
 
