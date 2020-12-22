@@ -44,6 +44,17 @@ class ClusterWorker(Logger):
         manager_address: str,
         data_dir: str = None,
     ):
+        """
+        init cluster worker instance
+        Args:
+            worker_id:
+            worker_ip:
+            max_tasks:
+            port_start:
+            port_end:
+            manager_address:
+            data_dir:
+        """
         self._task_queue: asyncio.Queue = asyncio.Queue()
         self._semaphore = asyncio.Semaphore(max_tasks)
 
@@ -189,6 +200,9 @@ class ClusterWorker(Logger):
             self._stop_event.set()
 
     async def wait_for_termination(self):
+        """
+        block until stop event was set
+        """
         await self._stop_event.wait()
         self.info(f"stop event set, stopping worker {self._worker_id}")
 
