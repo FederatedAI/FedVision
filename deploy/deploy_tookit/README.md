@@ -10,6 +10,7 @@ pip install -r FedVision/requirements.txt
 pip install -r FedVision/requirements_dev.txt
 python FedVision/tools/protobuf.py build
 cd FedVision/deploy/deploy_tookit
+export PYTHONPATH=$(pwd)
 python fedvision_deploy_toolkit/_build.py
 
 # build
