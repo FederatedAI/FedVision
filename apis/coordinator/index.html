@@ -830,8 +830,8 @@ FetchTask<span class="p">(</span><span class="bp">self</span><span class="p">,</
             <span class="n">status</span><span class="o">=</span><span class="n">coordinator_pb2</span><span class="o">.</span><span class="n">FetchTask</span><span class="o">.</span><span class="n">CANCELED</span>
         <span class="p">)</span>
 
+    <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">"chosen: </span><span class="si">{</span><span class="n">proposal</span><span class="o">.</span><span class="n">chosen</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">party_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">proposal</span><span class="o">.</span><span class="n">chosen</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">party_id</span><span class="p">,</span> <span class="n">proposal</span><span class="o">.</span><span class="n">chosen</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">coordinator_pb2</span><span class="o">.</span><span class="n">FetchTask</span><span class="o">.</span><span class="n">REP</span><span class="p">(</span>
             <span class="n">status</span><span class="o">=</span><span class="n">coordinator_pb2</span><span class="o">.</span><span class="n">FetchTask</span><span class="o">.</span><span class="n">RANDOM_OUT</span>
         <span class="p">)</span>
