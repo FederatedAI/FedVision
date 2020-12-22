@@ -4,6 +4,7 @@
 [![Documentation Read the Docs](https://img.shields.io/readthedocs/fedvision?label=Read%20the%20Docs)](https://fedvision.readthedocs.io/en/latest/?badge=latest)
 [![Documentation Github Page](https://github.com/FederatedAI/FedVision/workflows/GitHub%20Pages/badge.svg)](http://federatedai.github.io/FedVision)
 [![Support Python Versions](https://img.shields.io/pypi/pyversions/fedvision)](https://img.shields.io/pypi/pyversions/fedvision)
+[![PyPI Version](https://img.shields.io/pypi/v/FedVision)](https://pypi.org/project/fedvision/)
 
 
 FedVision is a Visual Object Detection Platform Powered by Federated Learning
@@ -90,7 +91,8 @@ mkdocs serve
 
 Open up http://127.0.0.1:8000/ in your browser.
 
-The latest version of online documentation can be found at https://FederatedAI.github.io/FedVision
+The latest version of online documentation can be found at [![Documentation Read the Docs](https://img.shields.io/readthedocs/fedvision?label=Read%20the%20Docs)](https://fedvision.readthedocs.io/en/latest/?badge=latest) or
+[![Documentation Github Page](https://github.com/FederatedAI/FedVision/workflows/GitHub%20Pages/badge.svg)](http://federatedai.github.io/FedVision)
 
 ## License
 
@@ -102,4 +104,5 @@ Please note that third-party libraries may not have the same license as FedVisio
 Any contributions you make are greatly appreciated!
 
 - Please report bugs by submitting a GitHub issue.
+
 - Please submit contributions using pull requests.
