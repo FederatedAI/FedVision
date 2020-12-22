@@ -12,7 +12,7 @@
         <link rel="canonical" href="http://github.com/FederatedAI/FedVision/deploy/cli/">
       
       <link rel="shortcut icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.1">
+      <meta name="generator" content="mkdocs-1.1.2, mkdocs-material-6.2.2">
     
     
       
@@ -992,7 +992,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 </code></pre></div>
-
 <p><strong>Options</strong>:</p>
 <ul>
 <li><code>--install-completion</code>: Install completion for the current shell.</li>
@@ -1010,7 +1009,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> deploy <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 </code></pre></div>
-
 <p><strong>Options</strong>:</p>
 <ul>
 <li><code>--help</code>: Show this message and exit.</li>
@@ -1023,7 +1021,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> deploy deploy <span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
-
 <p><strong>Options</strong>:</p>
 <ul>
 <li><code>--config FILE</code>: [required]</li>
@@ -1034,7 +1031,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 </code></pre></div>
-
 <p><strong>Options</strong>:</p>
 <ul>
 <li><code>--help</code>: Show this message and exit.</li>
@@ -1052,7 +1048,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services all <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 </code></pre></div>
-
 <p><strong>Options</strong>:</p>
 <ul>
 <li><code>--help</code>: Show this message and exit.</li>
@@ -1067,7 +1062,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services all start <span class="o">[</span>OPTIONS<span class="o">]</span> CONFIG
 </code></pre></div>
-
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>CONFIG</code>: [required]</li>
@@ -1081,7 +1075,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services all stop <span class="o">[</span>OPTIONS<span class="o">]</span> CONFIG
 </code></pre></div>
-
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>CONFIG</code>: [required]</li>
@@ -1095,7 +1088,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services cluster-manager <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 </code></pre></div>
-
 <p><strong>Options</strong>:</p>
 <ul>
 <li><code>--help</code>: Show this message and exit.</li>
@@ -1110,7 +1102,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services cluster-manager start <span class="o">[</span>OPTIONS<span class="o">]</span> MACHINE_SSH MACHINE_BASE_DIR MANAGER_PORT
 </code></pre></div>
-
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>MACHINE_SSH</code>: machine ssh string: user@host:port  [required]</li>
@@ -1126,7 +1117,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services cluster-manager stop <span class="o">[</span>OPTIONS<span class="o">]</span> MACHINE_SSH MACHINE_BASE_DIR MANAGER_PORT
 </code></pre></div>
-
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>MACHINE_SSH</code>: machine ssh string: user@host:port  [required]</li>
@@ -1142,7 +1132,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services cluster-worker <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 </code></pre></div>
-
 <p><strong>Options</strong>:</p>
 <ul>
 <li><code>--help</code>: Show this message and exit.</li>
@@ -1157,7 +1146,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services cluster-worker start <span class="o">[</span>OPTIONS<span class="o">]</span> MACHINE_SSH MACHINE_BASE_DIR NAME LOCAL_IP PORT_START PORT_END MAX_TASKS CLUSTER_MANAGER_ADDRESS
 </code></pre></div>
-
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>MACHINE_SSH</code>: machine ssh string: user@host:port  [required]</li>
@@ -1179,7 +1167,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services cluster-worker stop <span class="o">[</span>OPTIONS<span class="o">]</span> MACHINE_SSH MACHINE_BASE_DIR NAME
 </code></pre></div>
-
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>MACHINE_SSH</code>: machine ssh string: user@host:port  [required]</li>
@@ -1195,7 +1182,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services coordinator <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 </code></pre></div>
-
 <p><strong>Options</strong>:</p>
 <ul>
 <li><code>--help</code>: Show this message and exit.</li>
@@ -1210,7 +1196,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services coordinator start <span class="o">[</span>OPTIONS<span class="o">]</span> MACHINE_SSH MACHINE_BASE_DIR COORDINATOR_PORT
 </code></pre></div>
-
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>MACHINE_SSH</code>: machine ssh string: user@host:port  [required]</li>
@@ -1226,7 +1211,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services coordinator stop <span class="o">[</span>OPTIONS<span class="o">]</span> MACHINE_SSH MACHINE_BASE_DIR COORDINATOR_PORT
 </code></pre></div>
-
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>MACHINE_SSH</code>: machine ssh string: user@host:port  [required]</li>
@@ -1242,7 +1226,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services master <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 </code></pre></div>
-
 <p><strong>Options</strong>:</p>
 <ul>
 <li><code>--help</code>: Show this message and exit.</li>
@@ -1257,7 +1240,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services master start <span class="o">[</span>OPTIONS<span class="o">]</span> MACHINE_SSH MACHINE_BASE_DIR SUBMIT_PORT PARTY_ID CLUSTER_MANAGER_ADDRESS COORDINATOR_ADDRESS
 </code></pre></div>
-
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>MACHINE_SSH</code>: machine ssh string: user@host:port  [required]</li>
@@ -1276,7 +1258,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> services master stop <span class="o">[</span>OPTIONS<span class="o">]</span> MACHINE_SSH MACHINE_BASE_DIR SUBMIT_PORT
 </code></pre></div>
-
 <p><strong>Arguments</strong>:</p>
 <ul>
 <li><code>MACHINE_SSH</code>: machine ssh string: user@host:port  [required]</li>
@@ -1292,7 +1273,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> template <span class="o">[</span>OPTIONS<span class="o">]</span> COMMAND <span class="o">[</span>ARGS<span class="o">]</span>...
 </code></pre></div>
-
 <p><strong>Options</strong>:</p>
 <ul>
 <li><code>--help</code>: Show this message and exit.</li>
@@ -1307,7 +1287,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> template generate <span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
-
 <p><strong>Options</strong>:</p>
 <ul>
 <li><code>--help</code>: Show this message and exit.</li>
@@ -1317,7 +1296,6 @@
 <p><strong>Usage</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="gp">$</span> template standalone <span class="o">[</span>OPTIONS<span class="o">]</span>
 </code></pre></div>
-
 <p><strong>Options</strong>:</p>
 <ul>
 <li><code>--help</code>: Show this message and exit.</li>
