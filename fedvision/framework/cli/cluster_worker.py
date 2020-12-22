@@ -26,7 +26,21 @@ import click
 @click.option(
     "--manager-address", type=str, required=True, help="cluster manager address"
 )
-def start_worker(name, worker_ip, max_tasks, manager_address, port_start, port_end):
+@click.option(
+    "--data-base-dir",
+    type=click.Path(exists=True, file_okay=False, dir_okay=True),
+    required=False,
+    help="data base dir",
+)
+def start_worker(
+    name,
+    worker_ip,
+    max_tasks,
+    manager_address,
+    port_start,
+    port_end,
+    data_base_dir,
+):
     """
     start worker
     """
@@ -43,6 +57,7 @@ def start_worker(name, worker_ip, max_tasks, manager_address, port_start, port_e
         manager_address=manager_address,
         port_start=port_start,
         port_end=port_end,
+        data_dir=data_base_dir,
     )
     try:
         loop.run_until_complete(worker.start())

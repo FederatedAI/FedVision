@@ -33,7 +33,7 @@ import os
 import click
 
 from fedvision.paddle_fl.tasks.utils import FedAvgTrainer
-from fedvision import __data_dir__
+from fedvision import get_data_dir
 
 
 @click.command()
@@ -160,7 +160,7 @@ def fl_trainer(
 
     # redirect dataset path to Fedvision/data
     cfg.TrainReader["dataset"].dataset_dir = os.path.join(
-        __data_dir__, cfg.TrainReader["dataset"].dataset_dir
+        get_data_dir(), cfg.TrainReader["dataset"].dataset_dir
     )
 
     data_loader = create_reader(

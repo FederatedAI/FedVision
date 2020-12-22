@@ -42,6 +42,7 @@ class ClusterWorker(Logger):
         port_start: int,
         port_end: int,
         manager_address: str,
+        data_dir: str = None,
     ):
         self._task_queue: asyncio.Queue = asyncio.Queue()
         self._semaphore = asyncio.Semaphore(max_tasks)
@@ -53,6 +54,7 @@ class ClusterWorker(Logger):
         self._port_start = port_start
         self._port_end = port_end
         self._heartbeat_interval = 1
+        self._data_dir = data_dir
 
         self._channel: Optional[grpc.Channel] = None
         self._stub: Optional[cluster_pb2_grpc.ClusterManagerStub] = None
@@ -214,7 +216,8 @@ class ClusterWorker(Logger):
                 f"start to exec task, job_id={_task.job_id}, task_id={_task.task_id}, task_type={_task.task_type}"
             )
             executor = ProcessExecutor(
-                Path(__logs_dir__).joinpath(f"jobs/{_task.job_id}/{_task.task_id}")
+                Path(__logs_dir__).joinpath(f"jobs/{_task.job_id}/{_task.task_id}"),
+                data_dir=self._data_dir,
             )
             response = await _task.exec(executor)
             self.info(

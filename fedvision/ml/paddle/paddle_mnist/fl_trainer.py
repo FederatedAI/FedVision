@@ -35,7 +35,7 @@ import paddle
 import yaml
 
 from fedvision.paddle_fl.tasks.utils import FedAvgTrainer
-from fedvision import __data_dir__
+from fedvision import get_data_dir
 
 
 @click.command()
@@ -160,12 +160,12 @@ def fl_trainer(
 
     reader = paddle.dataset.mnist.reader_creator(
         image_filename=os.path.join(
-            __data_dir__,
+            get_data_dir(),
             "mnist",
             "train-images-idx3-ubyte.gz",
         ),
         label_filename=os.path.join(
-            __data_dir__, "mnist", "train-labels-idx1-ubyte.gz"
+            get_data_dir(), "mnist", "train-labels-idx1-ubyte.gz"
         ),
         buffer_size=100,
     )
