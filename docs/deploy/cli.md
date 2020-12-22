@@ -14,11 +14,13 @@ $ [OPTIONS] COMMAND [ARGS]...
 
 **Commands**:
 
-* `deploy`
-* `service`: [start|stop] service
-* `template`
+* `deploy`: deploy tools
+* `services`: services [start|stop] tools
+* `template`: template tools
 
 ## `deploy`
+
+deploy tools
 
 **Usage**:
 
@@ -47,14 +49,14 @@ $ deploy deploy [OPTIONS]
 * `--config FILE`: [required]
 * `--help`: Show this message and exit.
 
-## `service`
+## `services`
 
-[start|stop] service
+services [start|stop] tools
 
 **Usage**:
 
 ```console
-$ service [OPTIONS] COMMAND [ARGS]...
+$ services [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -69,14 +71,14 @@ $ service [OPTIONS] COMMAND [ARGS]...
 * `coordinator`: [start|stop] coordinator service
 * `master`: [start|stop] master service
 
-### `service all`
+### `services all`
 
 [start|stop] all services
 
 **Usage**:
 
 ```console
-$ service all [OPTIONS] COMMAND [ARGS]...
+$ services all [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -88,14 +90,14 @@ $ service all [OPTIONS] COMMAND [ARGS]...
 * `start`: start all services
 * `stop`: stop all services
 
-#### `service all start`
+#### `services all start`
 
 start all services
 
 **Usage**:
 
 ```console
-$ service all start [OPTIONS] CONFIG
+$ services all start [OPTIONS] CONFIG
 ```
 
 **Arguments**:
@@ -106,14 +108,14 @@ $ service all start [OPTIONS] CONFIG
 
 * `--help`: Show this message and exit.
 
-#### `service all stop`
+#### `services all stop`
 
 stop all services
 
 **Usage**:
 
 ```console
-$ service all stop [OPTIONS] CONFIG
+$ services all stop [OPTIONS] CONFIG
 ```
 
 **Arguments**:
@@ -124,14 +126,14 @@ $ service all stop [OPTIONS] CONFIG
 
 * `--help`: Show this message and exit.
 
-### `service cluster-manager`
+### `services cluster-manager`
 
 [start|stop] cluster manager service
 
 **Usage**:
 
 ```console
-$ service cluster-manager [OPTIONS] COMMAND [ARGS]...
+$ services cluster-manager [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -143,14 +145,14 @@ $ service cluster-manager [OPTIONS] COMMAND [ARGS]...
 * `start`: start cluster manager
 * `stop`: stop cluster manager
 
-#### `service cluster-manager start`
+#### `services cluster-manager start`
 
 start cluster manager
 
 **Usage**:
 
 ```console
-$ service cluster-manager start [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR MANAGER_PORT
+$ services cluster-manager start [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR MANAGER_PORT
 ```
 
 **Arguments**:
@@ -163,14 +165,14 @@ $ service cluster-manager start [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR MANAGER_P
 
 * `--help`: Show this message and exit.
 
-#### `service cluster-manager stop`
+#### `services cluster-manager stop`
 
 stop cluster manager
 
 **Usage**:
 
 ```console
-$ service cluster-manager stop [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR MANAGER_PORT
+$ services cluster-manager stop [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR MANAGER_PORT
 ```
 
 **Arguments**:
@@ -183,14 +185,14 @@ $ service cluster-manager stop [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR MANAGER_PO
 
 * `--help`: Show this message and exit.
 
-### `service cluster-worker`
+### `services cluster-worker`
 
 [start|stop] cluster worker service
 
 **Usage**:
 
 ```console
-$ service cluster-worker [OPTIONS] COMMAND [ARGS]...
+$ services cluster-worker [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -202,14 +204,14 @@ $ service cluster-worker [OPTIONS] COMMAND [ARGS]...
 * `start`: start cluster worker
 * `stop`: stop cluster worker
 
-#### `service cluster-worker start`
+#### `services cluster-worker start`
 
 start cluster worker
 
 **Usage**:
 
 ```console
-$ service cluster-worker start [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR NAME LOCAL_IP PORT_START PORT_END MAX_TASKS CLUSTER_MANAGER_ADDRESS
+$ services cluster-worker start [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR NAME LOCAL_IP PORT_START PORT_END MAX_TASKS CLUSTER_MANAGER_ADDRESS
 ```
 
 **Arguments**:
@@ -225,16 +227,17 @@ $ service cluster-worker start [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR NAME LOCAL
 
 **Options**:
 
+* `--data-dir TEXT`: data dir
 * `--help`: Show this message and exit.
 
-#### `service cluster-worker stop`
+#### `services cluster-worker stop`
 
 stop cluster worker
 
 **Usage**:
 
 ```console
-$ service cluster-worker stop [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR NAME
+$ services cluster-worker stop [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR NAME
 ```
 
 **Arguments**:
@@ -247,14 +250,14 @@ $ service cluster-worker stop [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR NAME
 
 * `--help`: Show this message and exit.
 
-### `service coordinator`
+### `services coordinator`
 
 [start|stop] coordinator service
 
 **Usage**:
 
 ```console
-$ service coordinator [OPTIONS] COMMAND [ARGS]...
+$ services coordinator [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -266,14 +269,14 @@ $ service coordinator [OPTIONS] COMMAND [ARGS]...
 * `start`: start coordinator
 * `stop`: stop coordinator
 
-#### `service coordinator start`
+#### `services coordinator start`
 
 start coordinator
 
 **Usage**:
 
 ```console
-$ service coordinator start [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR COORDINATOR_PORT
+$ services coordinator start [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR COORDINATOR_PORT
 ```
 
 **Arguments**:
@@ -286,14 +289,14 @@ $ service coordinator start [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR COORDINATOR_P
 
 * `--help`: Show this message and exit.
 
-#### `service coordinator stop`
+#### `services coordinator stop`
 
 stop coordinator
 
 **Usage**:
 
 ```console
-$ service coordinator stop [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR COORDINATOR_PORT
+$ services coordinator stop [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR COORDINATOR_PORT
 ```
 
 **Arguments**:
@@ -306,14 +309,14 @@ $ service coordinator stop [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR COORDINATOR_PO
 
 * `--help`: Show this message and exit.
 
-### `service master`
+### `services master`
 
 [start|stop] master service
 
 **Usage**:
 
 ```console
-$ service master [OPTIONS] COMMAND [ARGS]...
+$ services master [OPTIONS] COMMAND [ARGS]...
 ```
 
 **Options**:
@@ -325,14 +328,14 @@ $ service master [OPTIONS] COMMAND [ARGS]...
 * `start`: start master
 * `stop`: stop master
 
-#### `service master start`
+#### `services master start`
 
 start master
 
 **Usage**:
 
 ```console
-$ service master start [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR SUBMIT_PORT PARTY_ID CLUSTER_MANAGER_ADDRESS COORDINATOR_ADDRESS
+$ services master start [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR SUBMIT_PORT PARTY_ID CLUSTER_MANAGER_ADDRESS COORDINATOR_ADDRESS
 ```
 
 **Arguments**:
@@ -348,14 +351,14 @@ $ service master start [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR SUBMIT_PORT PARTY_
 
 * `--help`: Show this message and exit.
 
-#### `service master stop`
+#### `services master stop`
 
 stop master
 
 **Usage**:
 
 ```console
-$ service master stop [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR SUBMIT_PORT
+$ services master stop [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR SUBMIT_PORT
 ```
 
 **Arguments**:
@@ -370,6 +373,8 @@ $ service master stop [OPTIONS] MACHINE_SSH MACHINE_BASE_DIR SUBMIT_PORT
 
 ## `template`
 
+template tools
+
 **Usage**:
 
 ```console
@@ -382,14 +387,31 @@ $ template [OPTIONS] COMMAND [ARGS]...
 
 **Commands**:
 
-* `generate`
+* `generate`: generate template
+* `standalone`: generate template for standalone deploy
 
 ### `template generate`
+
+generate template
 
 **Usage**:
 
 ```console
 $ template generate [OPTIONS]
+```
+
+**Options**:
+
+* `--help`: Show this message and exit.
+
+### `template standalone`
+
+generate template for standalone deploy
+
+**Usage**:
+
+```console
+$ template standalone [OPTIONS]
 ```
 
 **Options**:

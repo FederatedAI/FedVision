@@ -276,8 +276,8 @@ class Coordinator(Logger, coordinator_pb2_grpc.CoordinatorServicer):
                 status=coordinator_pb2.FetchTask.CANCELED
             )
 
+        self.info(f"chosen: {proposal.chosen.keys()}")
         if request.party_id not in proposal.chosen:
-            print(request.party_id, proposal.chosen)
             return coordinator_pb2.FetchTask.REP(
                 status=coordinator_pb2.FetchTask.RANDOM_OUT
             )
