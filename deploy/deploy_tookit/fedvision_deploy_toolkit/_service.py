@@ -85,6 +85,10 @@ def start_all(
             for worker_config in cluster_config.get("workers", []):
                 typer.echo(f"starting worker {worker_config['name']}")
                 worker_machine = machines_map[worker_config["machine"]]
+                if "data_base_dir" in worker_machine:
+                    data_base_dir = worker_machine["data_base_dir"]
+                else:
+                    data_base_dir = None
                 status = start_cluster_worker(
                     machine_ssh=worker_machine["ssh_string"],
                     machine_base_dir=worker_machine["base_dir"],
@@ -94,6 +98,7 @@ def start_all(
                     port_end=int(worker_config["ports"].split("-")[1]),
                     max_tasks=worker_config["max_tasks"],
                     cluster_manager_address=cluster_address,
+                    data_base_dir=data_base_dir,
                 )
                 typer.echo(
                     f"start worker {worker_config['name']} done, success: {status}\n"
