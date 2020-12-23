@@ -7,7 +7,7 @@
 
 
 FedVision is a Visual Object Detection Platform Powered by Federated Learning
-
+![FederatedDetection](docs/img/federated_detection.png)
 
 ## Quick start
 
@@ -70,8 +70,14 @@ export PYTHONPATH=$PYTHONPATH:/data/projects/fedvision/FedVision
 sh FedVision/examples/paddle_mnist/run.sh 127.0.0.1:10002
 ```
 
-## Framework
+## Architecture and Runtime Framework
 
+We utilize `PaddleFL` to makes `PaddlePaddle` programs federated and utilize `PaddleDetection` to generate object detection program.
+This project may be extended to utilize `pytorch's Ecology` in future versions as well.
+
+![architecture](docs/img/Architecture.png)
+
+At runtime, each `Party` connects with coordinator and proposal jobs to or subscribe jobs from coordinator to participate in federated learning training cycle.
 
 ![framework](docs/img/fedvision.png)
 
