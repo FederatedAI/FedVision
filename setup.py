@@ -17,7 +17,7 @@ since we have a more proper toolkit: fedvision_deploy_toolkit to deploy|start|st
 This setup script will error a hint to tell users to install fedvision_deploy_toolkit
 instead of install FedVision directly.
 """
-
+import os
 import sys
 
 import setuptools
@@ -49,11 +49,17 @@ def get_version():
 
 HINT = "Please install the fedvision_deploy_toolkit package with: pip install fedvision_deploy_toolkit"
 
-
-if "sdist" not in sys.argv:
+if "sdist" not in sys.argv and os.path.exists(
+    os.path.join(__file__, os.path.pardir, ".gitignore")
+):
     """build source distribution only"""
     raise RuntimeError(HINT)
 
+# build proto buffer
+if True:
+    import tools.protobuf
+
+    tools.protobuf.build()
 
 setuptools.setup(
     name="fedvision",
