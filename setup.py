@@ -60,6 +60,7 @@ if True:
     import tools.protobuf
 
     tools.protobuf.build()
+    tools.protobuf.doc()
 
 setuptools.setup(
     name="fedvision",
