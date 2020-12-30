@@ -25,6 +25,7 @@ jobs:
       - name: Generate Proto Buffer
         run: |
           python3 tools/protobuf.py build
+          python3 tools/protobuf.py doc
       - name: Build site
         run: mkdocs build
       - name: Deploy
