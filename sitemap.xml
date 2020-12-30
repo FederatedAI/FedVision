@@ -44,7 +44,11 @@
      <lastmod>2020-12-30</lastmod>
      <changefreq>daily</changefreq>
     </url><url>
-     <loc>http://github.com/FederatedAI/FedVision/release/change_log/</loc>
+     <loc>http://github.com/FederatedAI/FedVision/release/release/</loc>
+     <lastmod>2020-12-30</lastmod>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>http://github.com/FederatedAI/FedVision/release/v0.1/</loc>
      <lastmod>2020-12-30</lastmod>
      <changefreq>daily</changefreq>
     </url>
